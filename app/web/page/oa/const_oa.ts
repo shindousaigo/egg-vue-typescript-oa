@@ -1,0 +1,1 @@
+export const RgServerBaseUrl = "http://oa-dev.royale.com/oa-server"

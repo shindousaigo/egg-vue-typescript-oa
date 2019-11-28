@@ -1,0 +1,7 @@
+
+type Query {
+  user(id: ID!): User
+  tags: [String!]
+  oa_access_token(corpid: ID!): Any
+  oa_user(userid: String!): Any
+}

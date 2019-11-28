@@ -1,0 +1,12 @@
+
+type OA_ACCESS_TOKEN {
+  corpid: ID!
+  corpsecret: String!
+  access_token: String!
+}
+
+type OA_USER {
+  userid: String!
+  code: String!
+}
+
