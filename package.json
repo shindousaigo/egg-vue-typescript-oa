@@ -60,6 +60,7 @@
     "pg": "^7.12.1",
     "reset.css": "^2.0.2",
     "sass-loader": "^8.0.0",
+    "sass-resources-loader": "^2.0.1",
     "shortid": "^2.2.15",
     "showdown": "^1.9.0",
     "simplemde": "^1.11.2",

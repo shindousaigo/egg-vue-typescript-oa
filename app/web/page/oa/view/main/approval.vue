@@ -7,7 +7,6 @@
         require(`web/page/oa/components/approval/${$state.route.params.component}.vue`)
           .default
       "
-      :detail="`shindousaigo`"
     />
   </div>
 </template>

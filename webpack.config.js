@@ -12,13 +12,26 @@ module.exports = {
   lib: ['vue', 'vuex', 'vue-router', 'vuex-router-sync', 'axios'],
   loaders: {
     babel: false,
-    typescript: true,
+    ts: true,
     scss: true,
   },
   plugins: {
     copy: [{
       from: 'app/web/asset',
       to: 'asset'
-    }]
+    }],
+  },
+  customize(webpackConfig) {
+    webpackConfig.module.rules.find(rule => rule.test.test("*.scss")).use.push(
+      {
+        loader: "sass-resources-loader",
+        options: {
+          resources: [
+            path.resolve(__dirname, "app/web/asset/css/common.scss")
+          ]
+        }
+      }
+    )
+    return webpackConfig;
   }
 };

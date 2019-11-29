@@ -364,7 +364,7 @@ import Container from "web/page/oa/view/container.vue";
 })
 export default class UserEdit extends Vue {
   get userInfo() {
-    return this.$getters.user.id[this.$state.route.params.userid];
+    return this.$getters.user_dictionary[this.$state.route.params.userid];
   }
   get avatar() {
     return this.userInfo.avatar || require(`web/page/oa/assets/rg.png`);

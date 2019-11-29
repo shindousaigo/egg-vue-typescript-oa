@@ -1,0 +1,6 @@
+.v_required_submit.v_required_error input,
+.v_required_submit.v_required_error textarea,
+.v_required_submit.v_required_error .el-radio__inner,
+.v_required_submit.v_required_error .el-checkbox__inner {
+  border: 2px solid rgba(250, 0, 0, 0.4);
+}

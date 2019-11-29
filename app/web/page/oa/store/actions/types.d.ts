@@ -1,5 +1,6 @@
 import { BOOLEAN_BY_NUMBER } from "../../../../typings/global";
 import { Enum } from ".";
+import ApprovalBase, { ApprovalParams, ApprovalParamsAttendance, ApprovalParamsDemand } from "../../components/approval/base";
 
 export namespace ACTIONS {
 
@@ -47,11 +48,11 @@ export namespace ACTIONS {
       interface State {
 
       }
-      type Params = Params.Attendance
+      type Params = Params.Attendance | Params.Demand
       namespace Params {
-        interface Attendance {
+        type Attendance = ApprovalBase[ApprovalParams][ApprovalParamsAttendance]
+        type Demand = ApprovalBase[ApprovalParams][ApprovalParamsDemand]
 
-        }
       }
       namespace Detail {
         type State = State.Attendance
@@ -212,7 +213,7 @@ export namespace ACTIONS {
     namespace Overtime {
       namespace Detail {
         interface State {
-          overtime_detail_info: {
+          user_overtime_detail: {
             hrSettingInfoList: {
               duration: number
               id: number
@@ -247,7 +248,7 @@ export namespace ACTIONS {
           userid: string
         }
         interface State {
-          annual_leave_detail_info: {
+          user_annual_leave_detail: {
             hrSettingInfoList: {
               duration: number
               id: number

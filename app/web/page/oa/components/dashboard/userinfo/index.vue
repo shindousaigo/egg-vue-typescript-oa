@@ -90,7 +90,7 @@
                     类型
                   </template>
                   <template slot slot-scope="{ row }">
-                    {{ getLeaveName(row.leaveType) }}
+                    {{ getLeaveName(row) }}
                   </template>
                 </el-table-column>
               </el-table-column>
@@ -193,6 +193,7 @@
 <script lang="ts">
 import { Component, Prop, Vue, Inject, Watch } from "vue-property-decorator";
 import * as _ from "lodash";
+import { ACTIONS } from "../../../store/actions/types";
 @Component<Userinfo>({
   async created() {
     this.$dispatch.user_info({
@@ -201,7 +202,7 @@ import * as _ from "lodash";
     this.$dispatch.user_overtime_detail({
       userid: this.$state.userid
     });
-    this.$dispatch.user_overtime_detail({
+    this.$dispatch.user_annual_leave_detail({
       userid: this.$state.userid
     });
     this.$dispatch.leave_type_list();
@@ -269,8 +270,8 @@ export default class Userinfo extends Vue {
     }
   }
   get produceDetailInfoList() {
-    if (this.userinfo.annual_leave_detail_info) {
-      return this.userinfo.annual_leave_detail_info.produceDetailInfoList.sort(
+    if (this.userinfo.user_annual_leave_detail) {
+      return this.userinfo.user_annual_leave_detail.produceDetailInfoList.sort(
         function(a, b) {
           return (
             new Date(b.expireDate).getTime() - new Date(a.expireDate).getTime()
@@ -280,8 +281,8 @@ export default class Userinfo extends Vue {
     }
   }
   get annualLeaveUseDetailInfoList() {
-    if (this.userinfo.annual_leave_detail_info) {
-      return this.userinfo.annual_leave_detail_info.useDetailInfoList;
+    if (this.userinfo.user_annual_leave_detail) {
+      return this.userinfo.user_annual_leave_detail.useDetailInfoList;
     }
   }
   get overtimeAvailable() {
@@ -296,9 +297,9 @@ export default class Userinfo extends Vue {
     }
   }
   get annualLeaveAvailable() {
-    if (this.userinfo.annual_leave_detail_info) {
+    if (this.userinfo.user_annual_leave_detail) {
       return this.$hours(
-        this.userinfo.annual_leave_detail_info.produceDetailInfoList
+        this.userinfo.user_annual_leave_detail.produceDetailInfoList
           .map(item => item.availableLeave)
           .reduce((a, b) => a + b)
       );
@@ -310,8 +311,11 @@ export default class Userinfo extends Vue {
   getData(key) {
     return this[key];
   }
-  getLeaveName(type) {
-    return this.$getters.leave_type_dictionary[type].leaveName;
+  getLeaveName(
+    row: ACTIONS.User.AnnualLeave.Detail.State["user_annual_leave_detail"]["useDetailInfoList"][0]
+  ) {
+    const type = this.$getters.leave_type_dictionary[row.leaveType];
+    return (type && type.leaveName) || "";
   }
   getProduceDetailInfoListRowClassName({ row }) {
     return `produce-detail-info-list${row.isAvailable ? "" : " disabled"}`;

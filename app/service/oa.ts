@@ -169,7 +169,7 @@ export default class OaService extends Service implements Implements {
       const data: ACTIONS.User.Overtime.Detail.State = await this.rgAxios.post("/leave/overtimeDetailInfo", {
         userId: params.userid
       })
-      return { overtime_detail_info: data }
+      return { user_overtime_detail: data }
     } catch (error) {
       return error.message
     }
@@ -181,7 +181,7 @@ export default class OaService extends Service implements Implements {
       const data: ACTIONS.User.AnnualLeave.Detail.State = await this.rgAxios.post("/leave/annualLeaveDetailInfo", {
         userId: params.userid
       })
-      return { annual_leave_detail_info: data }
+      return { user_annual_leave_detail: data }
     } catch (error) {
       return error.message
     }
