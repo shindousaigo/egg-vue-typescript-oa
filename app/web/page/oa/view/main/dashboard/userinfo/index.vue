@@ -193,7 +193,7 @@
 <script lang="ts">
 import { Component, Prop, Vue, Inject, Watch } from "vue-property-decorator";
 import * as _ from "lodash";
-import { ACTIONS } from "../../../store/actions/types";
+import { ACTIONS } from "web/page/oa/store/actions/types";
 @Component<Userinfo>({
   async created() {
     this.$dispatch.user_info({

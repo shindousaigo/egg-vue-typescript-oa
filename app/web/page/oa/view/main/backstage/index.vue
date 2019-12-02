@@ -1,23 +1,19 @@
 <template>
   <div class="backstage" v-if="userListLen">
-    <DepartmentTree
+    <router-view
+      name="tree"
       class="department-tree"
       :initUserList="initUserList"
       @update="departmentTreeUpdate"
-    />
+    ></router-view>
     <router-view class="router-view" :data="user_list"></router-view>
   </div>
 </template>
  
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
-import DepartmentTree from "web/page/oa/components/department_tree.vue";
 
-@Component<Backstage>({
-  components: {
-    DepartmentTree
-  }
-})
+@Component<Backstage>({})
 export default class Backstage extends Vue {
   user_list = [];
   get userListLen() {

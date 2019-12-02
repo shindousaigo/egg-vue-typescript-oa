@@ -1,7 +1,7 @@
 import State from "../state";
-import { DashBoardWorkProcess, DashBoardWorkWait, DashBoardWorkOver } from "../../router/const";
+import { DashboardWorkProcess, DashboardWorkWait, DashboardWorkOver } from "../../router/const";
 import moment from "moment"
-import { GETTERS } from "./getters";
+import { GETTERS } from "./types";
 
 const Methods = "methods"
 export type GettersMethods = typeof Methods
@@ -58,9 +58,9 @@ export default class Getters {
     get user_approval_list_dictionary(): GETTERS.User.Approval.List.Dictionary {
       // @ts-ignore
       return function (state: State) {
-        const Wait = DashBoardWorkWait as typeof DashBoardWorkWait
-        const Process = DashBoardWorkProcess as typeof DashBoardWorkProcess
-        const Over = DashBoardWorkOver as typeof DashBoardWorkOver
+        const Wait = DashboardWorkWait as typeof DashboardWorkWait
+        const Process = DashboardWorkProcess as typeof DashboardWorkProcess
+        const Over = DashboardWorkOver as typeof DashboardWorkOver
         const dictionary: GETTERS.User.Approval.List.Dictionary = {
           [Wait]: [],
           [Process]: [],

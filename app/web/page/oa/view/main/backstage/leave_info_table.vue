@@ -60,7 +60,7 @@
 <script lang="ts">
 import { Component, Prop, Vue, Inject, Watch } from "vue-property-decorator";
 import Container from "web/page/oa/view/container.vue";
-import { ACTIONS } from '../store/actions/actions';
+import { ACTIONS } from "web/page/oa/store/actions/types";
 
 @Component<LeaveInfoTable>({})
 export default class LeaveInfoTable extends Vue {

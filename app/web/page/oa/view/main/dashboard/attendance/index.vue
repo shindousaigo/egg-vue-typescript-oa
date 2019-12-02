@@ -13,7 +13,7 @@
  
 <script lang="ts">
 import { Component, Prop, Vue, Inject, Watch } from "vue-property-decorator";
-import { RgServerBaseUrl } from "../../../const_oa";
+import { RgServerBaseUrl } from '../../../../const_oa';
 
 @Component<Attendance>({
   beforeDestroy() {

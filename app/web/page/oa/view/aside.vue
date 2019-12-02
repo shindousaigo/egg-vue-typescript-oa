@@ -9,7 +9,7 @@
         background-color="#545c64"
         :default-openeds="defaultOpeneds"
       >
-        <el-menu-item :index="DashBoardBase" :route="{ path: DashBoardBase }">
+        <el-menu-item :index="DashboardBase" :route="{ path: DashboardBase }">
           <font-awesome-icon
             icon="user-tag"
             :style="{ width: `1.1em`, margin: `0 .8em 0 1.05em` }"

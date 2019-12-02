@@ -12,7 +12,7 @@
           :style="{ margin: `${aside_margin_top}px 0 0 0` }"
         />
       </el-aside>
-      <el-main style="height: inherit; overflow: hidden; padding: 0;">
+      <el-main style="height: inherit; overflow: hidden; padding: 0; position: relative;">
         <router-view style="height: inherit" />
       </el-main>
     </el-container>

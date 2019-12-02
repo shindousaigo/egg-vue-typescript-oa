@@ -162,8 +162,7 @@ export default class Calendar extends Vue {
         this.$router.push({
           path: "/approval/attendance",
           query: {
-            date: date,
-            type: remark
+            date: date
           }
         });
         break;
@@ -172,8 +171,7 @@ export default class Calendar extends Vue {
         this.$router.push({
           path: "/approval/attendance",
           query: {
-            date: date,
-            type: remark
+            date: date
           }
         });
         break;

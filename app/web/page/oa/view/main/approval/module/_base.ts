@@ -1,7 +1,11 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
-import { ACTIONS } from "../../store/actions/types";
-import { Enum } from "../../store/actions";
-import moment from "moment";
+// @ts-ignore
+import { ACTIONS } from "web/page/oa/store/actions/types";
+// @ts-ignore
+import { Enum } from "web/page/oa/store/actions/index"
+// @ts-ignore
+import { ApprovalAttendance, ApprovalDemand } from "../../../../router/const";
+import moment from "moment"
 
 type UploadFileList = {
   name: string;
@@ -11,19 +15,18 @@ type UploadFileList = {
   status: string;
   uid: number;
 }[]
-const Params = "params"
-const Attendance = "attendance"
-const Demand = "demand"
-export type ApprovalParams = typeof Params
-export type ApprovalParamsAttendance = typeof Attendance
-export type ApprovalParamsDemand = typeof Demand
 
-@Component<ApprovalBase>({
+const ParamsModel = "params_model"
+export type ApprovalParamsModel = typeof ParamsModel
+export type ApprovalParamsAttendance = typeof ApprovalAttendance
+export type ApprovalParamsDemand = typeof ApprovalDemand
+
+@Component<Base>({
   created() {
     this.init()
   }
 })
-export default class ApprovalBase extends Vue {
+export default class Base extends Vue {
   query: {
     date?: string
     serialNumber?: string
@@ -39,26 +42,26 @@ export default class ApprovalBase extends Vue {
   }
 
   get departmentId() {
-    return this.userInfo.department.join(",")
+    return this.userInfo && this.userInfo.department.join(",")
   }
 
-  [Params] = {
-    [Attendance]: {
+  params_model = {
+    [ApprovalAttendance]: {
       applicationType: 1,
       userId: this.$state.userid,
-      departmentId: "",
+      departmentId: this.departmentId,
       checkInDate: "",
       checkInType: "",
       timeSlot: "",
       reason: ""
     },
-    [Demand]: {
+    [ApprovalDemand]: {
       /** 申请类型 */
       applicationType: 6,
       /** 需求部门id */
       departmentId: this.departmentId,
       /** 申请人 */
-      userId: this.userInfo.userid,
+      userId: this.$state.userid,
       /** 申请日期	 */
       applicationDate: moment().format("YYYY-MM-DD"),
       /** 需求岗位 */
@@ -92,6 +95,11 @@ export default class ApprovalBase extends Vue {
     }
   }
 
+  get params() {
+    const params = this.params_model[this.$state.route.params.component]
+    return params
+  }
+
   handleApprovalApplication(serialNumber: string) {
     this.$dispatch.approval_application_detail({
       serialNumber
@@ -120,27 +128,31 @@ export default class ApprovalBase extends Vue {
   }
 
   submit() {
-    let params = this[Params][this.$state.route.params.component]
-    if (params.fileList) {
-      let formData = new FormData
-      for (let key in params) {
+    let formData: FormData
+    if (this.params.fileList) {
+      formData = new FormData
+      for (let key in this.params) {
         switch (key) {
           case "fileList":
-            params.fileList.forEach((item, index) => {
+            this.params.fileList.forEach((item, index) => {
               formData.set("file" + index, item.raw);
             });
             break;
           default:
-            const val = (params[key] + "").trim();
+            const val = (this.params[key] + "").trim();
             formData.set(key, val);
             break;
         }
       }
-      params = formData
+      formData.forEach(function (v, k) {
+        console.log(k, v)
+      })
+    } else {
+      formData = this.params
+      console.log(formData)
     }
-    this.console.log(params)
     return
-    // this.$dispatch.approval_application(params)
+    // this.$dispatch.approval_application(formData)
   }
 
   init() {

@@ -3,15 +3,15 @@
     <el-form :inline="true" class="demo-form-inline">
       <el-form-item label="审批人">
         <el-input
-          v-required="params.demand.position"
-          v-model="params.demand.position"
+          v-required="params.position"
+          v-model="params.position"
           placeholder="审批人"
         ></el-input>
       </el-form-item>
       <el-form-item label="活动区域">
         <el-select
-          v-required="params.demand.arrivalDate"
-          v-model="params.demand.arrivalDate"
+          v-required="params.arrivalDate"
+          v-model="params.arrivalDate"
           placeholder="活动区域"
         >
           <el-option label="区域一" value="shanghai"></el-option>
@@ -40,14 +40,14 @@
  
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-import Base from "./base";
+import Base from "./_base";
 
 @Component<Demand>({
   async created() {}
 })
 export default class Demand extends Base {
   onFileChanged(file, fileList) {
-    this.params.demand.fileList = fileList;
+    this.params.fileList = fileList;
   }
 }
 </script>

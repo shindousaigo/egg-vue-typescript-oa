@@ -1,65 +1,81 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import { DashboardView, ApprovalView, BackstageView, AsideView, HeaderView, DashboardWorkView, DashboardAttendanceView, DashBoardUserinfoView } from "./vues";
-import { DashBoardBase, DashBoardWorkAll, DashBoardWorkRegex, DashBoardAttendance, OtherRegex, Separator, BackstageBase, OaBase, DashBoardUserinfo } from "./const";
+import { DashboardView, ApprovalView, BackstageView, AsideView, HeaderView, DashboardWorkView, DashboardAttendanceView, DashboardUserinfoView, BackstageUserTableView, BackstageLeaveInfoTableView, BackstageUserEditView, BackstageDepartmentTreeView, ApprovalAttendanceView, ApprovalDemandView, NotFoundView } from "./vues";
+import { DashboardBase, DashboardWorkAll, DashboardAttendance, OtherRegex, Separator, BackstageBase, OaBase, DashboardUserinfo, BackstageUserTable, BackstageLeaveInfoTable, BackstageUserEdit, BackstageUserEditRegex, ApprovalAttendance, ApprovalBase, ApprovalDemand, ApprovalComponentRegex, NotFound, DashboardWorkProcess, DashboardWorkWait, DashboardWorkOver, DashboardComponentRegex } from "./const";
 
 Vue.use(VueRouter);
 
-function components(component: any): any {
+function components(component: any, base = OaBase): any {
   return {
-    default: () => component,
-    aside: () => AsideView,
-    header: () => HeaderView,
-  }
+    [OaBase]: {
+      default: () => component,
+      aside: () => AsideView,
+      header: () => HeaderView,
+    },
+    [BackstageBase]: {
+      default: () => component,
+      tree: () => BackstageDepartmentTreeView
+    },
+  }[base]
 }
+
 const DashboardConfig = {
-  path: DashBoardBase,
-  redirect: DashBoardBase + DashBoardWorkAll,
+  path: DashboardBase,
   components: components(DashboardView),
   children: [
     {
-      path: DashBoardWorkRegex,
-      component: () => DashboardWorkView,
+      path: '',
+      redirect: DashboardBase + DashboardWorkAll,
     },
     {
-      path: DashBoardAttendance,
-      component: () => DashboardAttendanceView,
-    },
-    {
-      path: DashBoardUserinfo,
-      component: () => DashBoardUserinfoView,
-    },
-    {
-      path: OtherRegex,
-      redirect: DashBoardBase + DashBoardWorkAll,
+      path: DashboardComponentRegex,
+      components: {
+        [DashboardWorkAll]: () => DashboardWorkView,
+        [DashboardWorkProcess]: () => DashboardWorkView,
+        [DashboardWorkWait]: () => DashboardWorkView,
+        [DashboardWorkOver]: () => DashboardWorkView,
+        [DashboardUserinfo]: () => DashboardUserinfoView,
+        [DashboardAttendance]: () => DashboardAttendanceView,
+        [NotFound]: () => NotFoundView,
+      }
     },
   ]
 }
 const ApprovalConfig = {
-  path: '/approval/:component',
-  components: components(ApprovalView)
+  path: ApprovalBase,
+  components: components(ApprovalView),
+  children: [
+    {
+      path: ApprovalComponentRegex,
+      components: {
+        [NotFound]: () => NotFoundView,
+        [ApprovalAttendance]: () => ApprovalAttendanceView,
+        [ApprovalDemand]: () => ApprovalDemandView
+      }
+    }
+  ]
 }
 const BackstageConfig = {
   path: BackstageBase,
-  redirect: '/backstage/user-table',
+  redirect: BackstageBase + BackstageUserTable,
   components: components(BackstageView),
   children: [
     {
-      name: 'user-table',
-      path: 'user-table',
-      component: () => import('web/page/oa/components/user_table.vue'),
+      name: BackstageUserTable,
+      path: BackstageUserTable,
+      components: components(BackstageUserTableView, BackstageBase),
     },
     {
-      path: 'leave-info-table',
-      component: () => import('web/page/oa/components/leave_info_table.vue'),
+      path: BackstageLeaveInfoTable,
+      components: components(BackstageLeaveInfoTableView, BackstageBase),
     },
     {
-      path: 'user-edit/:userid',
-      component: () => import('web/page/oa/components/user_edit.vue'),
+      path: BackstageUserEdit + Separator + BackstageUserEditRegex,
+      components: components(BackstageUserEditView, BackstageBase),
     },
     {
       path: OtherRegex,
-      redirect: '/backstage/user-table',
+      redirect: BackstageBase + BackstageUserTable,
     }
   ]
 }
@@ -74,7 +90,7 @@ export default function createRouter() {
       BackstageConfig,
       {
         path: OtherRegex,
-        redirect: DashBoardBase,
+        redirect: DashboardBase,
       },
     ]
   })

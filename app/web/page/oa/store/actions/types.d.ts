@@ -1,6 +1,6 @@
 import { BOOLEAN_BY_NUMBER } from "../../../../typings/global";
 import { Enum } from ".";
-import ApprovalBase, { ApprovalParams, ApprovalParamsAttendance, ApprovalParamsDemand } from "../../components/approval/base";
+import ApprovalBase, { ApprovalParamsModel, ApprovalParamsAttendance, ApprovalParamsDemand } from "../../view/main/approval/module/_base";
 
 export namespace ACTIONS {
 
@@ -50,9 +50,8 @@ export namespace ACTIONS {
       }
       type Params = Params.Attendance | Params.Demand
       namespace Params {
-        type Attendance = ApprovalBase[ApprovalParams][ApprovalParamsAttendance]
-        type Demand = ApprovalBase[ApprovalParams][ApprovalParamsDemand]
-
+        type Attendance = ApprovalBase[ApprovalParamsModel][ApprovalParamsAttendance]
+        type Demand = ApprovalBase[ApprovalParamsModel][ApprovalParamsDemand]
       }
       namespace Detail {
         type State = State.Attendance

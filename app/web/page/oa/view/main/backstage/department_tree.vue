@@ -40,8 +40,8 @@ type InitUserList = string[];
 
 import _ from "lodash";
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-import { DepartmentMapTree } from "../store/getters/department_map";
 import { TreeNode } from "element-ui/types/tree";
+import { GETTERS } from "../../../store/getters/getters";
 
 @Component<DepartmentsTree>({
   created() {
@@ -88,7 +88,7 @@ export default class DepartmentsTree extends Vue {
       : this.nodeUsers;
     this.nodemit(users);
   }
-  parseids(data: DepartmentMapTree) {
+  parseids(data: GETTERS.Department.Tree) {
     return _.flatMap([
       data.id,
       _.flatMap(
@@ -101,7 +101,7 @@ export default class DepartmentsTree extends Vue {
   nodemit(updateList: InitUserList) {
     this.$emit("update", updateList);
   }
-  datacheck(data: DepartmentMapTree) {
+  datacheck(data: GETTERS.Department.Tree) {
     if (data.parentid === 0) {
       this.nodeUsers = this.$state.user_list.map(el => el.userid);
     } else {
@@ -112,7 +112,7 @@ export default class DepartmentsTree extends Vue {
     }
     if (!this.filterCondition.length) this.nodemit(this.nodeUsers);
   }
-  nodeclick(data: DepartmentMapTree, node: TreeNode<any, any>) {
+  nodeclick(data: GETTERS.Department.Tree, node: TreeNode<any, any>) {
     if (this.lastNode) {
       if (node.id !== this.lastNode.id) {
         node.expanded = !node.expanded;

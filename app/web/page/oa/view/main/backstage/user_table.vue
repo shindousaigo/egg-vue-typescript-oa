@@ -61,8 +61,8 @@
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import Container from "web/page/oa/view/container.vue";
-import Dashboard from "../view/dashboard.vue";
-import { ACTIONS } from "../store/actions/actions";
+import Dashboard from "web/page/oa/view/dashboard.vue";
+import { ACTIONS } from "web/page/oa/store/actions/types";
 
 @Component<UserTable>({})
 export default class UserTable extends Vue {

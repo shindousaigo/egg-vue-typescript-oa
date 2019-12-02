@@ -148,15 +148,15 @@
 import { Component, Prop, Vue, Inject, Watch } from "vue-property-decorator";
 import {
   Separator,
-  DashBoardWorkOver,
-  DashBoardWorkWait,
-  DashBoardWorkProcess,
-  DashBoardWorkAll,
+  DashboardWorkOver,
+  DashboardWorkWait,
+  DashboardWorkProcess,
+  DashboardWorkAll,
   ApprovalBase
-} from "../../router/const";
+} from "web/page/oa/router/const";
 import _ from "lodash";
-import { GETTERS } from "../../store/getters/getters";
-import { ACTIONS } from "../../store/actions/actions";
+import { GETTERS } from "web/page/oa/store/getters/types";
+import { ACTIONS } from "web/page/oa/store/actions/types";
 @Component<Work>({
   async created() {
     this.queryList();
@@ -179,7 +179,7 @@ export default class Work extends Vue {
   }
   async del(row: GETTERS.User.Approval.List.Item) {
     await this.$confirm(`确认删除 ${row.serialNumber} 表单？`, "删除");
-    await this.$dispatch.approval_delete_application({
+    await this.$dispatch.approval_application_delete({
       serialNumber: row.serialNumber
     });
     this.queryList();
@@ -231,12 +231,12 @@ export default class Work extends Vue {
     const workType = this.$state.route.path.split(Separator).splice(-1)[0];
     let list: GETTERS.User.Approval.List.Item[];
     switch (workType) {
-      case DashBoardWorkAll:
+      case DashboardWorkAll:
         list = Array.prototype.concat(
           [],
-          this.$getters.user_approval_list_dictionary[DashBoardWorkWait],
-          this.$getters.user_approval_list_dictionary[DashBoardWorkProcess],
-          this.$getters.user_approval_list_dictionary[DashBoardWorkOver]
+          this.$getters.user_approval_list_dictionary[DashboardWorkWait],
+          this.$getters.user_approval_list_dictionary[DashboardWorkProcess],
+          this.$getters.user_approval_list_dictionary[DashboardWorkOver]
         );
         break;
       default:
@@ -266,9 +266,9 @@ export default class Work extends Vue {
   }
   getSerialNumberFontAwesomeIcon(row: GETTERS.User.Approval.List.Item) {
     const IconMap = {
-      [DashBoardWorkWait]: "envelope",
-      [DashBoardWorkProcess]: "envelope-open",
-      [DashBoardWorkOver]: "check-circle"
+      [DashboardWorkWait]: "envelope",
+      [DashboardWorkProcess]: "envelope-open",
+      [DashboardWorkOver]: "check-circle"
     };
     return IconMap[row.type];
   }

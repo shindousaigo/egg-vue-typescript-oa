@@ -1,4 +1,4 @@
-import { DashBoardWorkAll, DashBoardWorkProcess, DashBoardWorkWait, DashBoardWorkOver } from "../../router/const";
+import { DashboardWorkAll, DashboardWorkProcess, DashboardWorkWait, DashboardWorkOver } from "../../router/const";
 import { ACTIONS } from "../actions/types";
 
 export namespace GETTERS {
@@ -32,9 +32,9 @@ export namespace GETTERS {
     }
     namespace Approval {
       namespace List {
-        type wait = typeof DashBoardWorkWait
-        type process = typeof DashBoardWorkProcess
-        type over = typeof DashBoardWorkOver
+        type wait = typeof DashboardWorkWait
+        type process = typeof DashboardWorkProcess
+        type over = typeof DashboardWorkOver
         interface Item extends ACTIONS.User.Approval.List.Item {
           type: wait | process | over
         }
