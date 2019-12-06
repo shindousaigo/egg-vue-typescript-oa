@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import { DashboardView, ApprovalView, BackstageView, AsideView, HeaderView, DashboardWorkView, DashboardAttendanceView, DashboardUserinfoView, BackstageUserTableView, BackstageLeaveInfoTableView, BackstageUserEditView, BackstageDepartmentTreeView, ApprovalAttendanceView, ApprovalDemandView, NotFoundView } from "./vues";
-import { DashboardBase, DashboardWorkAll, DashboardAttendance, OtherRegex, Separator, BackstageBase, OaBase, DashboardUserinfo, BackstageUserTable, BackstageLeaveInfoTable, BackstageUserEdit, BackstageUserEditRegex, ApprovalAttendance, ApprovalBase, ApprovalDemand, ApprovalComponentRegex, NotFound, DashboardWorkProcess, DashboardWorkWait, DashboardWorkOver, DashboardComponentRegex } from "./const";
+import { DashboardView, ApprovalView, BackstageView, AsideView, HeaderView, DashboardWorkView, DashboardAttendanceView, DashboardUserinfoView, BackstageUserTableView, BackstageLeaveInfoTableView, BackstageUserEditView, BackstageDepartmentTreeView, ApprovalAttendanceView, ApprovalDemandView, NotFoundView, ApprovalApplicationDetailView } from "./vues";
+import { DashboardBase, DashboardWorkAll, DashboardAttendance, OtherRegex, Separator, BackstageBase, OaBase, DashboardUserinfo, BackstageUserTable, BackstageLeaveInfoTable, BackstageUserEdit, ApprovalAttendance, ApprovalBase, ApprovalDemand, ApprovalComponentRegex, NotFound, DashboardWorkProcess, DashboardWorkWait, DashboardWorkOver, DashboardComponentRegex, ApprovalApplicationDetail, MatchSymbol, BackstageUseridRegex, ApprovalApplicationDetailComponentRegex, ApprovalApplicationDetailSerialNumberRegex } from "./const";
 
 Vue.use(VueRouter);
 
@@ -25,10 +25,10 @@ const DashboardConfig = {
   children: [
     {
       path: '',
-      redirect: DashboardBase + DashboardWorkAll,
+      redirect: [DashboardBase, DashboardWorkAll].join(Separator),
     },
     {
-      path: DashboardComponentRegex,
+      path: MatchSymbol + DashboardComponentRegex,
       components: {
         [DashboardWorkAll]: () => DashboardWorkView,
         [DashboardWorkProcess]: () => DashboardWorkView,
@@ -46,18 +46,30 @@ const ApprovalConfig = {
   components: components(ApprovalView),
   children: [
     {
-      path: ApprovalComponentRegex,
+      name: ApprovalApplicationDetail,
+      path: ApprovalApplicationDetail,
+      component: () => ApprovalApplicationDetailView,
+      children: [
+        {
+          name: ApprovalApplicationDetail,
+          path: [MatchSymbol + ApprovalApplicationDetailComponentRegex, MatchSymbol + ApprovalApplicationDetailSerialNumberRegex].join(Separator),
+          component: () => ApprovalApplicationDetailView
+        }
+      ]
+    },
+    {
+      path: MatchSymbol + ApprovalComponentRegex,
       components: {
         [NotFound]: () => NotFoundView,
         [ApprovalAttendance]: () => ApprovalAttendanceView,
-        [ApprovalDemand]: () => ApprovalDemandView
+        [ApprovalDemand]: () => ApprovalDemandView,
       }
     }
   ]
 }
 const BackstageConfig = {
   path: BackstageBase,
-  redirect: BackstageBase + BackstageUserTable,
+  redirect: [BackstageBase, BackstageUserTable].join(Separator),
   components: components(BackstageView),
   children: [
     {
@@ -70,12 +82,12 @@ const BackstageConfig = {
       components: components(BackstageLeaveInfoTableView, BackstageBase),
     },
     {
-      path: BackstageUserEdit + Separator + BackstageUserEditRegex,
+      path: BackstageUserEdit + Separator + MatchSymbol + BackstageUseridRegex,
       components: components(BackstageUserEditView, BackstageBase),
     },
     {
       path: OtherRegex,
-      redirect: BackstageBase + BackstageUserTable,
+      redirect: [BackstageBase, BackstageUserTable].join(Separator),
     }
   ]
 }

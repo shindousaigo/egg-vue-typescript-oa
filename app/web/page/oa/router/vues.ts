@@ -9,8 +9,9 @@ export const DashboardAttendanceView = import('web/page/oa/view/main/dashboard/a
 export const DashboardUserinfoView = import('web/page/oa/view/main/dashboard/userinfo/index.vue')
 
 export const ApprovalView = import('web/page/oa/view/main/approval/index.vue')
-export const ApprovalAttendanceView = import('web/page/oa/view/main/approval/module/attendance.vue')
-export const ApprovalDemandView = import('web/page/oa/view/main/approval/module/demand.vue')
+export const ApprovalApplicationDetailView = import('web/page/oa/view/main/approval/detail.vue')
+export const ApprovalAttendanceView = import('web/page/oa/view/main/approval/application/attendance.vue')
+export const ApprovalDemandView = import('web/page/oa/view/main/approval/application/demand.vue')
 
 export const BackstageView = import('web/page/oa/view/main/backstage/index.vue')
 export const BackstageDepartmentTreeView = import('web/page/oa/view/main/backstage/department_tree.vue')

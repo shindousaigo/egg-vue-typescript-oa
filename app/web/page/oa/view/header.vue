@@ -25,7 +25,8 @@ import Container from "web/page/oa/view/container.vue";
 @Component
 export default class HeaderBar extends Vue {
   get info() {
-    return this.$getters.user_dictionary[this.$state.userid];
+    if (this.$getters.user_dictionary)
+      return this.$getters.user_dictionary[this.$state.userid];
   }
   get avatar() {
     return this.info ? this.info.avatar : require(`web/page/oa/assets/rg.png`);

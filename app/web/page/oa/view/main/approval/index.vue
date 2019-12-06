@@ -1,6 +1,7 @@
 <template>
   <div class="approval">
     <router-view :name="component"></router-view>
+    <router-view :name="ApprovalApplicationDetail"></router-view>
   </div>
 </template>
  
@@ -9,26 +10,31 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import {
   ApprovalBase,
   NotFound,
-  ApprovalComponentRegex
+  ApprovalComponentRegex,
+  ApprovalApplicationDetail,
+  MatchSymbol,
+  ApprovalApplicationDetailComponentRegex
 } from "web/page/oa/router/const";
 
-@Component<Approval>({
-  async created() {
-    console.log(this.$state.route.path);
-  }
-})
+@Component<Approval>({})
 export default class Approval extends Vue {
   get component() {
-    return Object.keys(
-      this.$router.currentRoute.matched.find(
-        item => item.path === ApprovalBase + ApprovalComponentRegex
-      ).components
-    ).includes(this.$state.route.params.component)
-      ? this.$state.route.params.component
-      : NotFound;
+    if (this.$state.route.params[ApprovalComponentRegex]) {
+      const routeConfig = this.$router.currentRoute.matched.find(({ path }) =>
+        path.endsWith(MatchSymbol + ApprovalComponentRegex)
+      );
+      return Object.keys(routeConfig.components).includes(
+        this.$state.route.params[ApprovalComponentRegex]
+      )
+        ? this.$state.route.params[ApprovalComponentRegex]
+        : NotFound;
+    }
   }
 }
 </script>
 
 <style lang="scss">
+.approval {
+  overflow: auto;
+}
 </style>

@@ -196,9 +196,6 @@ import * as _ from "lodash";
 import { ACTIONS } from "web/page/oa/store/actions/types";
 @Component<Userinfo>({
   async created() {
-    this.$dispatch.user_info({
-      userid: this.$state.userid
-    });
     this.$dispatch.user_overtime_detail({
       userid: this.$state.userid
     });
@@ -219,7 +216,9 @@ export default class Userinfo extends Vue {
     );
     const _userinfo = Object.assign(
       {},
-      this.$getters.user_dictionary[this.$state.userid],
+      this.$getters.user_dictionary
+        ? this.$getters.user_dictionary[this.$state.userid]
+        : {},
       this.$state.user_info
     );
     return Object.assign({}, _cache, _userinfo);
@@ -233,8 +232,8 @@ export default class Userinfo extends Vue {
   get telephone() {
     return this.userinfo.telephone;
   }
-  get name() {
-    return this.userinfo.name;
+  get userName() {
+    return this.userinfo.userName;
   }
   get userStatus() {
     return Userinfo.UserStatusMap[this.userinfo.userStatus];
@@ -327,7 +326,7 @@ export default class Userinfo extends Vue {
     },
     {
       label: "姓名",
-      key: "name"
+      key: "userName"
     },
     {
       label: "电话",

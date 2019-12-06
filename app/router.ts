@@ -2,6 +2,7 @@
 import { Application } from 'egg';
 // const mm = require('egg-mock');
 // const app = mm.app();
+const koaBody = require('koa-body');
 
 export default (application: Application) => {
   const { router, controller } = application;
@@ -11,7 +12,7 @@ export default (application: Application) => {
   // router.post('/admin/api/article/del', controller.admin.del);
   // router.get('/admin/api/article/:id', controller.admin.detail);
 
-
+  router.post('/oa/action/approval_application', koaBody({ multipart: true }), controller.oa.action);
   router.post('/oa/action/*', controller.oa.action);
   router.get('/oa', controller.oa.index);
   router.get('/oa/*', controller.oa.index);

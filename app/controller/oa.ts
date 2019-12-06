@@ -30,7 +30,7 @@ export default class Oa extends Controller {
 
   public async action(ctx: Context) {
     const OaService: OaService = this.service.oa
-    const action = ctx.params[0].replace(/\/|\\/, '')
+    const action = ctx.path.slice(11)
     try {
       ctx.body = JSON.stringify(await OaService[action](ctx))
     } catch (error) {

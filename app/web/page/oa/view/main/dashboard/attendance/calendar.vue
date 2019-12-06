@@ -6,7 +6,7 @@
       align="center"
       :data="tableData"
       @cell-click="cellClick"
-      style="min-width: 1000px; max-width: 1000px;"
+      style="min-width: 1000px; width: 1000px;"
     >
       <el-table-column
         :index="k"
@@ -20,16 +20,14 @@
             <span>{{ row[k] }}</span>
             <div v-if="hasRemak(row[k])">
               <a
-                style="display: block"
-                v-for="(item, index) in pageRecord[row[k]].split(',')"
                 :key="index"
-                :style="{
-                  color: ['迟到', '未打卡', '旷工', '下班未打卡'].includes(item)
-                    ? 'red'
-                    : 'blue'
-                }"
+                style="display: block"
                 href="javascript:void(0)"
-                @click="exception.call(this, item, row[k])"
+                @click="exceptionHandler.call(this, row[k])"
+                v-for="(item, index) in pageRecord[row[k]].split(',')"
+                :style="{
+                  color: $attendanceException(item) ? 'red' : 'blue'
+                }"
               >
                 {{ item }}
               </a>
@@ -155,27 +153,14 @@ export default class Calendar extends Vue {
   get pageRecord() {
     return this.$getters.attendance_page_record;
   }
-  async exception(remark, date) {
-    switch (remark) {
-      case "迟到":
-        await this.$confirm("跳转补签申请页面？");
-        this.$router.push({
-          path: "/approval/attendance",
-          query: {
-            date: date
-          }
-        });
-        break;
-      case "下班未打卡":
-        await this.$confirm("跳转补签申请页面？");
-        this.$router.push({
-          path: "/approval/attendance",
-          query: {
-            date: date
-          }
-        });
-        break;
-    }
+  async exceptionHandler(date) {
+    await this.$confirm("跳转补签申请页面？");
+    this.$router.push({
+      path: "/approval/attendance",
+      query: {
+        date: date
+      }
+    });
   }
 }
 </script>
@@ -191,14 +176,6 @@ export default class Calendar extends Vue {
         background: rgba(105, 105, 105, 0.2);
       }
     }
-    .cell {
-      display: flex;
-      width: 100%;
-      height: 100%;
-      align-items: center;
-      justify-content: center;
-      padding: 0 !important;
-    }
     .date-box {
       display: flex;
       width: 100%;
@@ -206,6 +183,7 @@ export default class Calendar extends Vue {
       align-items: center;
       flex-direction: column;
       justify-content: center;
+      line-height: 24px;
       &.cur {
         background: #ffebeb;
       }

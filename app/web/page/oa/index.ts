@@ -12,6 +12,7 @@ library.add(faUserTag, faFile, faFileAlt, faBan, faCaretSquareDown, faEdit, faTi
 
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import * as RouterConstant from "./router/const";
+import { Enum } from "./store/actions";
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
@@ -92,6 +93,7 @@ const beforeCreate = function ({ store }) {
                 }
               })
               if (errors.length === 0) {
+                // debugger
                 binding.value()
               } else {
                 console.error(errors)
@@ -117,7 +119,7 @@ const beforeCreate = function ({ store }) {
                 }
               })
               if (errors.length === 0) {
-                binding.value(1)
+                binding.value(Enum.ApprovalResult.Agree)
               } else {
                 console.error(errors)
               }
@@ -158,6 +160,13 @@ const beforeCreate = function ({ store }) {
   Object.keys(RouterConstant).forEach(key => {
     prototype[key] = RouterConstant[key]
   })
+  prototype.Enum = Enum
+  prototype.$attendanceException = (function () {
+    const exceptions = ['迟到', '未打卡', '旷工', '下班未打卡'];
+    return function (remark: string) {
+      return exceptions.includes(remark)
+    }
+  })()
   initialCommit(prototype, store)
 }
 

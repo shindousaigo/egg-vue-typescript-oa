@@ -11,13 +11,11 @@ export default class Getters {
     get user_dictionary(): GETTERS.User.Dictionary {
       // @ts-ignore
       return function (state: State) {
-        const user_dictionary: GETTERS.User.Dictionary = {}
         if (state.user_list.length) {
-          state.user_list.forEach(user => {
-            user_dictionary[user.userid] = user
-          })
+          return Object.fromEntries(state.user_list.map(user => {
+            return [user.userid, user]
+          }))
         }
-        return user_dictionary
       }
     },
     get leave_type_dictionary(): GETTERS.Leave.Type.Dictionary {
@@ -35,24 +33,19 @@ export default class Getters {
     get department_tree(): GETTERS.Department.Tree {
       // @ts-ignore
       return function (state: State) {
-        // @ts-ignore
-        let tree: GETTERS.Department.Tree = []
-        if (state.department_list.length) {
-          tree = Getters.Instance.parse(state)
+        if (state.department_list) {
+          return Getters.Instance.parse(state)
         }
-        return tree
       }
     },
     get department_id_dictionary(): GETTERS.Department.ID.Dictionary {
       // @ts-ignore
-      return function (state: State) {
-        let dictionary: GETTERS.Department.ID.Dictionary = {}
-        if (state.department_list.length) {
-          state.department_list.forEach(department => {
-            dictionary[department.id] = department
-          })
+      return function (state: State, getters: Getters[GettersMethods]) {
+        if (state.department_list.length && getters.department_tree) {
+          return Object.fromEntries(
+            state.department_list.map(department => [department.id, department])
+          )
         }
-        return dictionary
       }
     },
     get user_approval_list_dictionary(): GETTERS.User.Approval.List.Dictionary {
@@ -134,13 +127,14 @@ export default class Getters {
     },
   }
   private parse(s_tate: State, parentid = 0) {
-    return s_tate.department_list.filter(el => el.parentid === parentid).map(el => {
-      return Object.assign(el, {
-        children: (() => {
-          return this.parse(s_tate, el.id) || []
-        })()
+    if (s_tate.department_list)
+      return s_tate.department_list.filter(el => el.parentid === parentid).map(el => {
+        return Object.assign(el, {
+          children: (() => {
+            return this.parse(s_tate, el.id) || []
+          })()
+        })
       })
-    })
   }
   public get map() {
     return Object.fromEntries(

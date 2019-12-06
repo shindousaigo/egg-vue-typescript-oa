@@ -14,43 +14,45 @@
             class="notification"
             :hidden="workWaitCount === 0"
           >
-            {{ status[$path] ? `${status[$path]}` : `处理中心` }}
+            {{ status[component] ? `${status[component]}` : `处理中心` }}
           </el-badge>
         </template>
         <el-menu-item
-          :index="DashboardBase + DashboardWorkProcess"
-          :route="{ path: DashboardBase + DashboardWorkProcess }"
+          :index="[DashboardBase, DashboardWorkProcess].join(Separator)"
+          :route="{
+            path: [DashboardBase, DashboardWorkProcess].join(Separator)
+          }"
         >
           {{ status[DashboardWorkProcess] }}
         </el-menu-item>
         <el-menu-item
-          :index="DashboardBase + DashboardWorkWait"
-          :route="{ path: DashboardBase + DashboardWorkWait }"
+          :index="[DashboardBase, DashboardWorkWait].join(Separator)"
+          :route="{ path: [DashboardBase, DashboardWorkWait].join(Separator) }"
         >
           {{ status[DashboardWorkWait] }}
         </el-menu-item>
         <el-menu-item
-          :index="`${DashboardBase}${DashboardWorkOver}`"
-          :route="{ path: `${DashboardBase}${DashboardWorkOver}` }"
+          :index="[DashboardBase, DashboardWorkOver].join(Separator)"
+          :route="{ path: [DashboardBase, DashboardWorkOver].join(Separator) }"
         >
           {{ status[DashboardWorkOver] }}
         </el-menu-item>
         <el-menu-item
-          :index="`${DashboardBase}${DashboardWorkAll}`"
-          :route="{ path: `${DashboardBase}${DashboardWorkAll}` }"
+          :index="[DashboardBase, DashboardWorkAll].join(Separator)"
+          :route="{ path: [DashboardBase, DashboardWorkAll].join(Separator) }"
         >
           {{ status[DashboardWorkAll] }}
         </el-menu-item>
       </el-submenu>
       <el-menu-item
-        :index="`${DashboardBase}${DashboardAttendance}`"
-        :route="{ path: `${DashboardBase}${DashboardAttendance}` }"
+        :index="[DashboardBase, DashboardAttendance].join(Separator)"
+        :route="{ path: [DashboardBase, DashboardAttendance].join(Separator) }"
       >
         考勤系统
       </el-menu-item>
       <el-menu-item
-        :index="`${DashboardBase}${DashboardUserinfo}`"
-        :route="{ path: `${DashboardBase}${DashboardUserinfo}` }"
+        :index="[DashboardBase, DashboardUserinfo].join(Separator)"
+        :route="{ path: [DashboardBase, DashboardUserinfo].join(Separator) }"
       >
         用户信息
       </el-menu-item>
@@ -70,7 +72,8 @@ import {
   ApprovalBase,
   NotFound,
   DashboardBase,
-  DashboardComponentRegex
+  DashboardComponentRegex,
+  MatchSymbol
 } from "../../../router/const";
 
 @Component<Dashboard>({
@@ -81,8 +84,8 @@ import {
 export default class Dashboard extends Vue {
   get component() {
     return Object.keys(
-      this.$router.currentRoute.matched.find(
-        item => item.path === DashboardBase + DashboardComponentRegex
+      this.$router.currentRoute.matched.find(({ path }) =>
+        path.endsWith(MatchSymbol + DashboardComponentRegex)
       ).components
     ).includes(this.$state.route.params.component)
       ? this.$state.route.params.component
@@ -115,12 +118,16 @@ export default class Dashboard extends Vue {
     width: 1000px;
   }
   .router-view {
-    position: absolute;
-    left: 32 + 8px;
-    bottom: 14px;
-    right: 0;
+    left: 0;
     top: 80px;
-    overflow: auto;
+    width: 100%;
+    min-width: 1080px;
+    bottom: 14px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: absolute;
+    box-sizing: border-box;
+    padding-left: 40px;
   }
   .dashboard-submenu {
     .notification {

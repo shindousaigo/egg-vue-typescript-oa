@@ -1,6 +1,40 @@
+/**
+ * 指令v-required样式
+ */
 .v_required_submit.v_required_error input,
 .v_required_submit.v_required_error textarea,
 .v_required_submit.v_required_error .el-radio__inner,
 .v_required_submit.v_required_error .el-checkbox__inner {
   border: 2px solid rgba(250, 0, 0, 0.4);
+}
+/**
+ * elment-ui样式重写
+ */
+.el-table {
+  .cell {
+    width: inherit;
+    height: inherit;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+  }
+  th {
+    height: 100%;
+    padding: 0;
+    height: 34px;
+  }
+  .el-table__row {
+    td {
+      padding: 0;
+      .cell {
+        line-height: 40px;
+      }
+    }
+  }
+}
+
+.full {
+  width: 100% !important;
 }

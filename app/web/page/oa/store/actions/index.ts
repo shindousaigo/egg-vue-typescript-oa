@@ -1,30 +1,34 @@
 import { ActionContext } from "vuex";
 import State from "../state";
 import { ACTIONS } from "./types";
+import { Notification } from "element-ui"
 
 const Methods = "methods"
 export type ActionsMethods = typeof Methods
 export default class Actions {
   private async fetch(url: keyof Actions[ActionsMethods], params?: any) {
     const config: RequestInit = {
-      method: "POST",
-      headers: {
-        "content-type": "application/json"
-      }
+      method: "POST"
     }
     if (params) {
       if (params instanceof FormData) {
-        const headers = {
-          "content-type": "multipart/form-data"
-        }
-        config.headers = Object.assign(config.headers, headers)
         config.body = params
       } else {
+        config.headers = {
+          "content-type": "application/json"
+        }
         config.body = JSON.stringify(params)
       }
     }
     const response = await fetch(`/oa/action/${url}`, config);
-    return response.json();
+    return response.json().then(res => {
+      if (typeof res === "string") {
+        return Promise.reject(res)
+      } else {
+        if (res.message) Notification.success(res.message)
+        return res
+      }
+    });
   }
   public [Methods] = {
     /** 获取所有部门列表 */
@@ -52,7 +56,11 @@ export default class Actions {
     },
     /** 申请接口 */
     approval_application: async (params: ACTIONS.Approval.Application.Params): Promise<ACTIONS.Approval.Application.State> => {
-      const state = await this.fetch("approval_application", params)
+      return this.fetch("approval_application", params)
+    },
+    /** 审核审批申请 */
+    approval_confirm: async (params: ACTIONS.Approval.Confirm.Params): Promise<ACTIONS.Approval.Confirm.State> => {
+      const state = await this.fetch("approval_confirm", params)
       return state
     },
     /** 根据流水号查询申请详细信息 */

@@ -5,7 +5,8 @@
       border
       size="small"
       :style="{
-        width: `${220 + 220 + 220 + 160 + 140 + 1}px`,
+        width: `${220 + 220 + 220 + 180 + 140 + 1}px`,
+        'min-width': `${220 + 220 + 220 + 180 + 140 + 1}px`,
         margin: `16px 0 0 0`
       }"
     >
@@ -13,15 +14,14 @@
         <template slot="header" slot-scope="{}">
           <div v-if="!isEditing" class="col-header">
             <span>流水号</span>
-            <font-awesome-icon
+            <i
+              class="el-icon-edit-outline"
               @click="toEdit.call(this, true)"
-              icon="edit"
-              style="font-size: 16px; cursor: pointer;"
+              style="font-size: 17px; cursor: pointer; font-weight: bold; margin: 1px 0 0 0; color: rgb(144, 147, 153);"
             />
           </div>
           <div v-else class="col-header">
             <el-input
-              style="padding: 0; top: -1px;"
               size="mini"
               v-model="filter.serialNumber"
               placeholder="流水号"
@@ -36,7 +36,7 @@
         <template slot slot-scope="{ row }">
           <font-awesome-icon
             :icon="getSerialNumberFontAwesomeIcon(row)"
-            style="font-size: 13px; margin: 0 4px 0 0;"
+            style="font-size: 13px; margin: 0 6px 0 0;"
           />
           {{ row.serialNumber }}
         </template>
@@ -113,7 +113,7 @@
           {{ row.userId }}
         </template>
       </el-table-column>
-      <el-table-column label="申请时间" width="160">
+      <el-table-column label="申请时间" width="180">
         <template slot slot-scope="{ row }">
           {{ row.createTime.slice(0, -2) }}
         </template>
@@ -124,7 +124,7 @@
             查看
           </a>
           <a
-            v-if="row.result === 3 && row.userId === $state.userid"
+            v-if="true || (row.result === 3 && row.userId === $state.userid)"
             href="javascript:void(0)"
             style="margin: 0 0 0 12px;"
             @click="del.call(this, row)"
@@ -152,7 +152,8 @@ import {
   DashboardWorkWait,
   DashboardWorkProcess,
   DashboardWorkAll,
-  ApprovalBase
+  ApprovalBase,
+  ApprovalApplicationDetail
 } from "web/page/oa/router/const";
 import _ from "lodash";
 import { GETTERS } from "web/page/oa/store/getters/types";
@@ -169,12 +170,12 @@ export default class Work extends Vue {
   async detail(row: GETTERS.User.Approval.List.Item) {
     await this.$confirm(`确认进入 ${row.serialNumber} 表单？`, "查看");
     this.$router.push({
-      path:
-        ApprovalBase +
+      path: [
+        ApprovalBase,
+        ApprovalApplicationDetail,
         this.$getters.approval_type_dictionary[row.processType].key,
-      query: {
-        serialNumber: row.serialNumber
-      }
+        row.serialNumber
+      ].join(Separator)
     });
   }
   async del(row: GETTERS.User.Approval.List.Item) {
@@ -274,44 +275,47 @@ export default class Work extends Vue {
   }
 }
 </script>
-<style scoped lang="scss">
-.work {
-  .col-header {
-    padding: 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-}
-</style>
 <style  lang="scss">
 .work {
-  th {
-    padding: 0 !important;
-    .el-input__suffix {
-      height: 30px;
-    }
-    .el-select {
-      padding: 0;
-      line-height: 26px;
-    }
-    .el-select__tags {
-      line-height: 26px;
-      padding: 0;
-      .el-tag {
-        margin-top: 4px;
+  .el-table {
+    th {
+      .col-header {
+        width: 100%;
+        height: 100%;
+        padding: 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .el-input__suffix {
+        height: 30px;
+      }
+      .el-select {
+        padding: 0;
+        line-height: 26px;
+      }
+      .el-select__tags {
+        line-height: 26px;
+        padding: 0;
+        .el-tag {
+          margin-top: 4px;
+        }
+      }
+      .el-input {
+        padding: 0;
+      }
+      .el-input__inner {
+        height: 29px;
+        top: 0;
+        position: relative;
+      }
+      .el-tag__close.el-icon-close {
+        right: -5px;
       }
     }
-    .el-input {
-      padding: 0;
-    }
-    .el-input__inner {
-      height: 29px;
-      top: -1px;
-      position: relative;
-    }
-    .el-tag__close.el-icon-close {
-      right: -5px;
+    .cell {
+      justify-content: start !important;
+      padding: 0 16px !important;
     }
   }
 }

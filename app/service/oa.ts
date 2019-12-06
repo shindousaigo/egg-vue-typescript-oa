@@ -3,6 +3,9 @@ import axios, { AxiosInstance } from 'axios'
 import { RgServerBaseUrl } from "../web/page/oa/const_oa";
 import { ACTIONS } from "web/page/oa/store/actions/types";
 import Actions, { ActionsMethods } from "web/page/oa/store/actions";
+const FormData = require('form-data');
+const fs = require("fs")
+const http = require('http');
 
 type Implements = {
   [key in keyof Actions[ActionsMethods]]: any
@@ -24,14 +27,19 @@ export default class OaService extends Service implements Implements {
     })
     this.rgAxios.interceptors.response.use(function (config) {
       if (config.data.code === 200) {
-        return config.data.data || config.data.message
+        return config.data.data || {
+          code: 200,
+          message: config.data.message
+        }
       } else {
         return Promise.reject(config.data);
       }
     })
     this.rgAxios.interceptors.request.use(function (config) {
       if (config.data) {
-        config.data = Object.keys(config.data).map(key => `${key}=${config.data[key]}`).join(`&`)
+        if (!config.headers["content-type"] || config.headers["content-type"].indexOf("multipart/form-data") === -1) {
+          config.data = Object.keys(config.data).map(key => `${key}=${config.data[key]}`).join(`&`)
+        }
       }
       return config;
     }, function (error) {
@@ -274,10 +282,27 @@ export default class OaService extends Service implements Implements {
   }
 
   public async approval_application(ctx: Context) {
+    const ApplicationPath = "/approval/application"
     try {
-      const params: ACTIONS.Approval.Application.Params = JSON.parse(ctx.request.rawBody)
-      const data: ACTIONS.Approval.Application.State = await this.rgAxios.post("/approval/application", params)
-      return data
+      let data: ACTIONS.Approval.Application.State
+      let files = Object.keys(ctx.request.files)
+      let body = Object.keys(ctx.request.body)
+      let formData = new FormData
+      /** 添加一般参数 */
+      body.forEach(k => {
+        const v = ctx.request.body[k]
+        formData.append(k, v)
+      })
+      if (files.length) { /** 添加上传参数 */
+        files.forEach(k => {
+          const path = ctx.request.files[k].path
+          const v = fs.createReadStream(path)
+          formData.append(k, v)
+        })
+      }
+      return this.rgAxios.post(ApplicationPath, formData, {
+        headers: formData.getHeaders()
+      })
     } catch (error) {
       return error.message
     }
@@ -301,6 +326,16 @@ export default class OaService extends Service implements Implements {
       const data: ACTIONS.Approval.Application.Delete.State = await this.rgAxios.post("/approval/deleteApplication", {
         serialNumber: params.serialNumber,
       })
+      return data
+    } catch (error) {
+      return error.message
+    }
+  }
+
+  public async approval_confirm(ctx: Context) {
+    try {
+      const params: ACTIONS.Approval.Confirm.Params = JSON.parse(ctx.request.rawBody)
+      const data: ACTIONS.Approval.Confirm.State = await this.rgAxios.post("/approval/confirm", params)
       return data
     } catch (error) {
       return error.message

@@ -1,6 +1,6 @@
 import { BOOLEAN_BY_NUMBER } from "../../../../typings/global";
 import { Enum } from ".";
-import ApprovalBase, { ApprovalParamsModel, ApprovalParamsAttendance, ApprovalParamsDemand } from "../../view/main/approval/module/_base";
+import ApprovalBase, { ApprovalParamsModel, ApprovalParamsAttendance, ApprovalParamsDemand } from "../../view/main/approval/base";
 
 export namespace ACTIONS {
 
@@ -39,19 +39,32 @@ export namespace ACTIONS {
         /** 需要查询的日期 格式如：2019-02-01 */
         date: string
       }
-      type State = any
+      type State = string[]
     }
   }
 
   namespace Approval {
     namespace Application {
-      interface State {
-
+      type State = {
+        code: number
+        message: string
       }
+      // namespace State {
+      //   interface Attendance {
+      //     checkInDate: string
+      //     checkInType: string
+      //     createTime: string
+      //     departmentId: string
+      //     reason: string
+      //     serialNumber: string
+      //     timeSlot: string
+      //     userId: string
+      //   }
+      // }
       type Params = Params.Attendance | Params.Demand
       namespace Params {
-        type Attendance = ApprovalBase[ApprovalParamsModel][ApprovalParamsAttendance]
-        type Demand = ApprovalBase[ApprovalParamsModel][ApprovalParamsDemand]
+        type Attendance = typeof ApprovalBase[ApprovalParamsModel][ApprovalParamsAttendance]
+        type Demand = typeof ApprovalBase[ApprovalParamsModel][ApprovalParamsDemand]
       }
       namespace Detail {
         type State = State.Attendance
@@ -75,6 +88,13 @@ export namespace ACTIONS {
           serialNumber: string
         }
         type State = string
+      }
+    }
+    namespace Confirm {
+      type Params = Approval.List.Item
+      interface State {
+        code: number
+        message: string
       }
     }
     namespace List {

@@ -360,7 +360,15 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import Container from "web/page/oa/view/container.vue";
 
 @Component<UserEdit>({
-  created() {}
+  created() {
+    this.$dispatch
+      .user_info({
+        userid: this.$state.route.params.userid
+      })
+      .then(data => {
+        console.log(data);
+      });
+  }
 })
 export default class UserEdit extends Vue {
   get userInfo() {

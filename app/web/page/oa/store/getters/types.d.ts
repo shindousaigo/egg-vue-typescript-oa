@@ -8,9 +8,9 @@ export namespace GETTERS {
       children?: Tree[]
     }
     namespace ID {
-      interface Dictionary {
-        [id: string]: ACTIONS.Department.List.Item
-      }
+      type Dictionary = {
+        [id: string]: Tree
+      } | undefined
     }
   }
 
@@ -27,9 +27,9 @@ export namespace GETTERS {
   }
 
   namespace User {
-    interface Dictionary {
+    type Dictionary = {
       [userid: string]: ACTIONS.User.List.Item
-    }
+    } | undefined
     namespace Approval {
       namespace List {
         type wait = typeof DashboardWorkWait

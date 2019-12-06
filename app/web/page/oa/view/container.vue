@@ -12,7 +12,7 @@
           :style="{ margin: `${aside_margin_top}px 0 0 0` }"
         />
       </el-aside>
-      <el-main style="height: inherit; overflow: hidden; padding: 0; position: relative;">
+      <el-main>
         <router-view style="height: inherit" />
       </el-main>
     </el-container>
@@ -28,6 +28,9 @@ import { Component, Prop, Vue, Emit, Provide } from "vue-property-decorator";
     await this.$dispatch.department_list();
     this.$dispatch.user_list({
       department_id: this.$getters.department_tree[0].id
+    });
+    this.$dispatch.user_info({
+      userid: this.$state.userid
     });
   }
 })
@@ -62,6 +65,13 @@ export default class Container extends Vue {
     background: rgb(84, 92, 100);
     position: relative;
     overflow: hidden;
+  }
+  .el-main {
+    padding: 0;
+    height: inherit;
+    position: relative;
+    overflow-x: auto;
+    overflow-y: hidden;
   }
 }
 </style>

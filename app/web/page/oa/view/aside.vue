@@ -22,13 +22,19 @@
               icon="file-alt"
               style="margin: 0 .8em 0 1.05em"
             />
-            <span slot="title">审批申请</span>
+            <span slot="title">
+              审批{{
+                $state.route.params[ApprovalApplicationDetailComponentRegex]
+                  ? `详情`
+                  : `申请`
+              }}</span
+            >
           </template>
           <el-menu-item
             v-for="item in $state.approval_type_list"
             :key="item.key"
-            :index="ApprovalBase + item.key"
-            :route="{ path: ApprovalBase + item.key }"
+            :index="[ApprovalBase, item.key].join(Separator)"
+            :route="{ path: [ApprovalBase, item.key].join(Separator) }"
           >
             {{ item.label }}
           </el-menu-item>
@@ -49,7 +55,12 @@
 <script lang="ts">
 import { Component, Prop, Vue, Inject, Watch } from "vue-property-decorator";
 import IScroll from "iscroll";
-import { ApprovalBase } from "../router/const";
+import {
+  ApprovalBase,
+  ApprovalComponentRegex,
+  ApprovalApplicationDetailComponentRegex,
+  Separator
+} from "../router/const";
 
 @Component<AsideMenu>({
   async mounted() {
@@ -86,9 +97,16 @@ export default class AsideMenu extends Vue {
   };
   @Watch("$state.route.path")
   $state_route_path() {
-    const activeIndex = this.$state.route.path.startsWith(ApprovalBase)
-      ? this.$state.route.path
-      : this.$state.route.path.match(/\/\w*\//)[0];
+    let activeIndex;
+    if (this.$state.route.path.startsWith(ApprovalBase)) {
+      activeIndex = [
+        ApprovalBase,
+        this.$state.route.params[ApprovalComponentRegex] ||
+          this.$state.route.params[ApprovalApplicationDetailComponentRegex]
+      ].join(Separator);
+    } else {
+      activeIndex = this.$state.route.path.match(/\/\w*/)[0];
+    }
     this.$refs.menu["activeIndex"] = activeIndex;
   }
   defaultOpeneds = [ApprovalBase];
@@ -122,6 +140,7 @@ export default class AsideMenu extends Vue {
   bottom: 0;
   left: 1px;
   right: 0;
+  z-index: 0;
   .el-submenu .el-menu-item {
     min-width: inherit;
     // height: 68px;
