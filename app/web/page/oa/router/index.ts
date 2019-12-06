@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import { DashboardView, ApprovalView, BackstageView, AsideView, HeaderView, DashboardWorkView, DashboardAttendanceView, DashboardUserinfoView, BackstageUserTableView, BackstageLeaveInfoTableView, BackstageUserEditView, BackstageDepartmentTreeView, ApprovalAttendanceView, ApprovalDemandView, NotFoundView, ApprovalApplicationDetailView } from "./vues";
-import { DashboardBase, DashboardWorkAll, DashboardAttendance, OtherRegex, Separator, BackstageBase, OaBase, DashboardUserinfo, BackstageUserTable, BackstageLeaveInfoTable, BackstageUserEdit, ApprovalAttendance, ApprovalBase, ApprovalDemand, ApprovalComponentRegex, NotFound, DashboardWorkProcess, DashboardWorkWait, DashboardWorkOver, DashboardComponentRegex, ApprovalApplicationDetail, MatchSymbol, BackstageUseridRegex, ApprovalApplicationDetailComponentRegex, ApprovalApplicationDetailSerialNumberRegex } from "./const";
+import { DashboardView, ApprovalView, BackstageView, AsideView, HeaderView, DashboardWorkView, DashboardAttendanceView, DashboardUserinfoView, BackstageUserTableView, BackstageLeaveInfoTableView, BackstageUserEditView, BackstageDepartmentTreeView, ApprovalAttendanceView, ApprovalDemandView, NotFoundView, ApprovalApplicationDetailView, ApprovalOvertimeView } from "./vues";
+import { DashboardBase, DashboardWorkAll, DashboardAttendance, OtherRegex, Separator, BackstageBase, OaBase, DashboardUserinfo, BackstageUserTable, BackstageLeaveInfoTable, BackstageUserEdit, ApprovalAttendance, ApprovalBase, ApprovalDemand, ApprovalComponentRegex, NotFound, DashboardWorkProcess, DashboardWorkWait, DashboardWorkOver, DashboardComponentRegex, ApprovalApplicationDetail, MatchSymbol, BackstageUseridRegex, ApprovalApplicationDetailComponentRegex, ApprovalApplicationDetailSerialNumberRegex, ApprovalOvertime } from "./const";
 
 Vue.use(VueRouter);
 
@@ -63,6 +63,7 @@ const ApprovalConfig = {
         [NotFound]: () => NotFoundView,
         [ApprovalAttendance]: () => ApprovalAttendanceView,
         [ApprovalDemand]: () => ApprovalDemandView,
+        [ApprovalOvertime]: () => ApprovalOvertimeView,
       }
     }
   ]

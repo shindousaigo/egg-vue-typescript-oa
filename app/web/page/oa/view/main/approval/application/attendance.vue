@@ -309,10 +309,6 @@ export default class Attendance extends Base {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
   }
-
-  .el-textarea__inner {
-    height: 38px !important;
-  }
   .el-table {
     .cell {
       padding: 6px 16px !important;

@@ -1,7 +1,7 @@
 import moment from "moment"
 import { Component, Vue, Provide } from "vue-property-decorator";
 import { ACTIONS } from "../../../store/actions/types";
-import { ApprovalAttendance, ApprovalDemand } from "../../../router/const";
+import { ApprovalAttendance, ApprovalDemand, ApprovalOvertime } from "../../../router/const";
 import { RgServerBaseUrl } from "../../../const_oa";
 
 type UploadFileList = {
@@ -17,6 +17,7 @@ const ParamsModel = "params_model"
 export type ApprovalParamsModel = typeof ParamsModel
 export type ApprovalParamsAttendance = typeof ApprovalAttendance
 export type ApprovalParamsDemand = typeof ApprovalDemand
+export type ApprovalParamsOvertime = typeof ApprovalOvertime
 
 @Component<ApprovalBase>({
   created() {
@@ -40,6 +41,7 @@ export default class ApprovalBase extends Vue {
 
   private static ApplicationType = {
     [ApprovalAttendance]: "1" as "1",
+    [ApprovalOvertime]: "2" as "2",
     [ApprovalDemand]: "6" as "6",
   }
 
@@ -50,9 +52,7 @@ export default class ApprovalBase extends Vue {
       /** 申请人 */
       userId: ApprovalBase.instance.$state.userid,
       /** 需求部门id */
-      get departmentId() {
-        return ApprovalBase.instance.departmentId
-      },
+      get departmentId() { return ApprovalBase.instance.departmentId },
       /** 补签日期 */
       checkInDate: "",
       /** 补签原因 */
@@ -64,17 +64,29 @@ export default class ApprovalBase extends Vue {
       /** 文件列表 */
       fileList: [] as UploadFileList
     },
+    [ApprovalOvertime]: {
+      /** 申请类型 */
+      applicationType: ApprovalBase.ApplicationType[ApprovalOvertime],
+      /** 申请人 */
+      userId: ApprovalBase.instance.$state.userid,
+      /** 需求部门id */
+      get departmentId() { return ApprovalBase.instance.departmentId },
+      /** 申请日期	 */
+      get applicationDate() { return moment().format("YYYY-MM-DD") },
+      reason: "",
+      startTime: "",
+      endTime: "",
+      duration: "",
+    },
     [ApprovalDemand]: {
       /** 申请类型 */
       applicationType: ApprovalBase.ApplicationType[ApprovalDemand],
       /** 申请人 */
       userId: ApprovalBase.instance.$state.userid,
       /** 需求部门id */
-      get departmentId() {
-        return ApprovalBase.instance.departmentId
-      },
+      get departmentId() { return ApprovalBase.instance.departmentId },
       /** 申请日期	 */
-      applicationDate: moment().format("YYYY-MM-DD"),
+      get applicationDate() { return moment().format("YYYY-MM-DD") },
       /** 需求岗位 */
       position: "",
       /** 需求人数 */
@@ -103,7 +115,8 @@ export default class ApprovalBase extends Vue {
       specialRequirements: "",
       /** 文件列表 */
       fileList: [] as UploadFileList
-    }
+    },
+
   }
 
   private static detial_model_item_tpl(label: string, valuefn?: (applicationDetail: ACTIONS.Approval.Application.Detail.State, key: string) => string) {

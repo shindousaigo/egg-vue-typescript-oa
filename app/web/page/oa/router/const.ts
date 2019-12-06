@@ -23,6 +23,7 @@ export const ApprovalApplicationDetailComponentRegex = 'adcomponent'
 export const ApprovalApplicationDetailSerialNumberRegex = 'adserial'
 export const ApprovalAttendance = 'attendance'
 export const ApprovalDemand = 'demand'
+export const ApprovalOvertime = 'overtime'
 
 export const BackstageBase = '/backstage'
 export const BackstageUserTable = 'user-table'

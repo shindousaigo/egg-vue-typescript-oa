@@ -12,6 +12,7 @@ export const ApprovalView = import('web/page/oa/view/main/approval/index.vue')
 export const ApprovalApplicationDetailView = import('web/page/oa/view/main/approval/detail.vue')
 export const ApprovalAttendanceView = import('web/page/oa/view/main/approval/application/attendance.vue')
 export const ApprovalDemandView = import('web/page/oa/view/main/approval/application/demand.vue')
+export const ApprovalOvertimeView = import('web/page/oa/view/main/approval/application/overtime.vue')
 
 export const BackstageView = import('web/page/oa/view/main/backstage/index.vue')
 export const BackstageDepartmentTreeView = import('web/page/oa/view/main/backstage/department_tree.vue')
