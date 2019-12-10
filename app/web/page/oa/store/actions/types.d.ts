@@ -1,6 +1,7 @@
 import { BOOLEAN_BY_NUMBER } from "../../../../typings/global";
 import { Enum } from ".";
-import ApprovalBase, { ApprovalParamsModel, ApprovalParamsAttendance, ApprovalParamsDemand } from "../../view/main/approval/base";
+import ApprovalApplicationConfig from "../../view/main/approval/application/_approval_application_config";
+import { Const } from "../../router/const";
 
 export namespace ACTIONS {
 
@@ -49,22 +50,22 @@ export namespace ACTIONS {
         code: number
         message: string
       }
-      // namespace State {
-      //   interface Attendance {
-      //     checkInDate: string
-      //     checkInType: string
-      //     createTime: string
-      //     departmentId: string
-      //     reason: string
-      //     serialNumber: string
-      //     timeSlot: string
-      //     userId: string
-      //   }
-      // }
-      type Params = Params.Attendance | Params.Demand
+      type UploadFileList = {
+        name: string;
+        percentage: number;
+        raw: File;
+        size: number;
+        status: string;
+        uid: number;
+      }[]
+      type FileList = {
+        fileList: UploadFileList
+      }
       namespace Params {
-        type Attendance = typeof ApprovalBase[ApprovalParamsModel][ApprovalParamsAttendance]
-        type Demand = typeof ApprovalBase[ApprovalParamsModel][ApprovalParamsDemand]
+        type Attendance = typeof ApprovalApplicationConfig["ParamsModel"][typeof Const.ApprovalAttendance] & FileList
+        type Overtime = typeof ApprovalApplicationConfig["ParamsModel"][typeof Const.ApprovalOvertime] & FileList
+        type Leave = typeof ApprovalApplicationConfig["ParamsModel"][typeof Const.ApprovalLeave] & FileList
+        type Demand = typeof ApprovalApplicationConfig["ParamsModel"][typeof Const.ApprovalDemand] & FileList
       }
       namespace Detail {
         type State = State.Attendance
@@ -266,6 +267,12 @@ export namespace ACTIONS {
         interface Params {
           userid: string
         }
+        interface UseDetailInfoListItem {
+          duration: number
+          leaveType: string
+          useDate: string
+          userId: string
+        }
         interface State {
           user_annual_leave_detail: {
             hrSettingInfoList: {
@@ -287,12 +294,7 @@ export namespace ACTIONS {
               useLeave: number
               userId: string
             }[]
-            useDetailInfoList: {
-              duration: number
-              leaveType: string
-              useDate: string
-              userId: string
-            }[]
+            useDetailInfoList: UseDetailInfoListItem[]
           }
         }
       }
@@ -375,7 +377,7 @@ export namespace ACTIONS {
           leaveName: string
         }
         type LeaveType = LeaveTypeBase & {
-          chidren?: LeaveType[]
+          children?: LeaveType[]
         }
         type State = LeaveType[]
       }

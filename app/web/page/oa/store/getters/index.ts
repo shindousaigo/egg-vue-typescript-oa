@@ -1,7 +1,7 @@
 import State from "../state";
-import { DashboardWorkProcess, DashboardWorkWait, DashboardWorkOver } from "../../router/const";
 import moment from "moment"
 import { GETTERS } from "./types";
+import { Const } from "../../router/const";
 
 const Methods = "methods"
 export type GettersMethods = typeof Methods
@@ -21,13 +21,11 @@ export default class Getters {
     get leave_type_dictionary(): GETTERS.Leave.Type.Dictionary {
       // @ts-ignore
       return function (state: State) {
-        const initialData = {}
         if (state.leave_type_list.length) {
-          state.leave_type_list.forEach(item => {
-            initialData[item.id] = item
-          })
+          return Object.fromEntries(state.leave_type_list.map(item => {
+            return [item.id, item]
+          }))
         }
-        return initialData
       }
     },
     get department_tree(): GETTERS.Department.Tree {
@@ -51,27 +49,24 @@ export default class Getters {
     get user_approval_list_dictionary(): GETTERS.User.Approval.List.Dictionary {
       // @ts-ignore
       return function (state: State) {
-        const Wait = DashboardWorkWait as typeof DashboardWorkWait
-        const Process = DashboardWorkProcess as typeof DashboardWorkProcess
-        const Over = DashboardWorkOver as typeof DashboardWorkOver
         const dictionary: GETTERS.User.Approval.List.Dictionary = {
-          [Wait]: [],
-          [Process]: [],
-          [Over]: [],
+          [Const.DashboardWorkWait]: [],
+          [Const.DashboardWorkProcess]: [],
+          [Const.DashboardWorkOver]: [],
         }
         if (state.user_approval_list.length) {
           state.user_approval_list.forEach(item => {
             if (item.result === 3) {
               if (state.userid === item.userId) {
-                const listItem: GETTERS.User.Approval.List.Item = Object.assign({}, { type: Process }, item)
-                dictionary[Process].push(listItem)
+                const listItem: GETTERS.User.Approval.List.Item = Object.assign({}, { type: Const.DashboardWorkProcess as typeof Const.DashboardWorkProcess }, item)
+                dictionary[Const.DashboardWorkProcess].push(listItem)
               } else {
-                const listItem: GETTERS.User.Approval.List.Item = Object.assign({}, { type: Wait }, item)
-                dictionary[Wait].push(listItem)
+                const listItem: GETTERS.User.Approval.List.Item = Object.assign({}, { type: Const.DashboardWorkWait as typeof Const.DashboardWorkWait }, item)
+                dictionary[Const.DashboardWorkWait].push(listItem)
               }
             } else {
-              const listItem: GETTERS.User.Approval.List.Item = Object.assign({}, { type: Over }, item)
-              dictionary[Over].push(listItem)
+              const listItem: GETTERS.User.Approval.List.Item = Object.assign({}, { type: Const.DashboardWorkOver as typeof Const.DashboardWorkOver }, item)
+              dictionary[Const.DashboardWorkOver].push(listItem)
             }
           })
         }

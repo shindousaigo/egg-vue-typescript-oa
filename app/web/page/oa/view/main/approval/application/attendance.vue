@@ -37,26 +37,24 @@
           width: 160 + 135 + 120 + 400 + 88 + 1 + 'px'
         }"
       >
-        <el-table-column :label="detail.checkInDate.label" width="160">
+        <el-table-column :label="description.checkInDate.label" width="160">
           <template slot slot-scope="{ row, colunm, $index }">
             <el-date-picker
               size="mini"
               type="date"
               placeholder="选择日期"
               value-format="yyyy-MM-dd"
-              @change="updateChange"
               v-model="tableData[$index].checkInDate"
               v-required="tableData[$index].checkInDate"
             >
             </el-date-picker>
           </template>
         </el-table-column>
-        <el-table-column :label="detail.checkInType.label" width="135">
+        <el-table-column :label="description.checkInType.label" width="135">
           <template slot slot-scope="{ row, colunm, $index }">
             <el-select
               size="mini"
               placeholder="请选择"
-              @change="updateChange"
               v-model="tableData[$index].checkInType"
               v-required="tableData[$index].checkInType"
             >
@@ -70,12 +68,11 @@
             </el-select>
           </template>
         </el-table-column>
-        <el-table-column :label="detail.timeSlot.label" width="120">
+        <el-table-column :label="description.timeSlot.label" width="120">
           <template slot slot-scope="{ row, colunm, $index }">
             <el-select
               size="mini"
               placeholder="请选择"
-              @change="updateChange"
               v-model="tableData[$index].timeSlot"
               v-required="tableData[$index].timeSlot"
             >
@@ -89,12 +86,11 @@
             </el-select>
           </template>
         </el-table-column>
-        <el-table-column :label="detail.reason.label" width="400">
+        <el-table-column :label="description.reason.label" width="400">
           <template slot slot-scope="{ row, colunm, $index }">
             <el-input
               autosize
               type="textarea"
-              @change="updateChange"
               v-model="tableData[$index].reason"
               v-required="tableData[$index].reason"
             ></el-input>
@@ -118,12 +114,11 @@
  
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-import { ApprovalBase } from "web/page/oa/router/const";
 import moment from "moment";
 import { ACTIONS } from "web/page/oa/store/actions/types";
 import { Enum } from "web/page/oa/store/actions";
 import * as _ from "lodash";
-import Base, { ApprovalParamsModel, ApprovalParamsAttendance } from "../base";
+import ApprovalApplicationBase from "./_approval_application_base";
 
 @Component<Attendance>({
   async created() {
@@ -153,11 +148,11 @@ import Base, { ApprovalParamsModel, ApprovalParamsAttendance } from "../base";
     this.add(this.$state.route.query.date as string | undefined);
   },
   components: {
-    card: require("../card.vue").default
+    card: require(`./_item/card.vue`).default
   }
 })
-export default class Attendance extends Base {
-  params: typeof Base[ApprovalParamsModel][ApprovalParamsAttendance];
+export default class Attendance extends ApprovalApplicationBase {
+  params: ACTIONS.Approval.Application.Params.Attendance;
   curStartTime = this.$getters.attendance_date_scope[0];
   curEndTime = this.$getters.attendance_date_scope[1];
   lastStartTime = moment(this.curStartTime)
@@ -223,15 +218,13 @@ export default class Attendance extends Base {
     } else {
       this.tableData.push(this.tableDataItem(date));
     }
-    this.updateChange();
   }
 
   del(index) {
     this.tableData.splice(index, 1);
-    this.updateChange();
   }
 
-  updateChange() {
+  beforeSubmit() {
     let checkInDate = [],
       checkInType = [],
       timeSlot = [],
@@ -247,6 +240,12 @@ export default class Attendance extends Base {
     this.params.timeSlot = timeSlot.join(",");
     this.params.reason = reason.join("|");
   }
+  submit = (submit => {
+    return async () => {
+      this.beforeSubmit();
+      submit();
+    };
+  })(this.submit);
 
   attendanceExceptionIsDisabled(date: string) {
     return this.tableData.map(item => item.checkInDate).includes(date);
@@ -298,17 +297,7 @@ export default class Attendance extends Base {
     position: relative;
     margin: 16px 0 16px 0;
   }
-  .submit {
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    width: 200px;
-    height: 60px;
-    border: 0;
-    border-top-right-radius: 0;
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-  }
+
   .el-table {
     .cell {
       padding: 6px 16px !important;

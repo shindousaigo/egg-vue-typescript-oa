@@ -146,15 +146,6 @@
  
 <script lang="ts">
 import { Component, Prop, Vue, Inject, Watch } from "vue-property-decorator";
-import {
-  Separator,
-  DashboardWorkOver,
-  DashboardWorkWait,
-  DashboardWorkProcess,
-  DashboardWorkAll,
-  ApprovalBase,
-  ApprovalApplicationDetail
-} from "web/page/oa/router/const";
 import _ from "lodash";
 import { GETTERS } from "web/page/oa/store/getters/types";
 import { ACTIONS } from "web/page/oa/store/actions/types";
@@ -171,11 +162,11 @@ export default class Work extends Vue {
     await this.$confirm(`确认进入 ${row.serialNumber} 表单？`, "查看");
     this.$router.push({
       path: [
-        ApprovalBase,
-        ApprovalApplicationDetail,
+        this.ApprovalBase,
+        this.ApprovalApplicationDetail,
         this.$getters.approval_type_dictionary[row.processType].key,
         row.serialNumber
-      ].join(Separator)
+      ].join(this.Separator)
     });
   }
   async del(row: GETTERS.User.Approval.List.Item) {
@@ -229,15 +220,17 @@ export default class Work extends Vue {
     }
   }
   get list(): GETTERS.User.Approval.List.Item[] {
-    const workType = this.$state.route.path.split(Separator).splice(-1)[0];
+    const workType = this.$state.route.path.split(this.Separator).splice(-1)[0];
     let list: GETTERS.User.Approval.List.Item[];
     switch (workType) {
-      case DashboardWorkAll:
+      case this.DashboardWorkAll:
         list = Array.prototype.concat(
           [],
-          this.$getters.user_approval_list_dictionary[DashboardWorkWait],
-          this.$getters.user_approval_list_dictionary[DashboardWorkProcess],
-          this.$getters.user_approval_list_dictionary[DashboardWorkOver]
+          this.$getters.user_approval_list_dictionary[this.DashboardWorkWait],
+          this.$getters.user_approval_list_dictionary[
+            this.DashboardWorkProcess
+          ],
+          this.$getters.user_approval_list_dictionary[this.DashboardWorkOver]
         );
         break;
       default:
@@ -267,9 +260,9 @@ export default class Work extends Vue {
   }
   getSerialNumberFontAwesomeIcon(row: GETTERS.User.Approval.List.Item) {
     const IconMap = {
-      [DashboardWorkWait]: "envelope",
-      [DashboardWorkProcess]: "envelope-open",
-      [DashboardWorkOver]: "check-circle"
+      [this.DashboardWorkWait]: "envelope",
+      [this.DashboardWorkProcess]: "envelope-open",
+      [this.DashboardWorkOver]: "check-circle"
     };
     return IconMap[row.type];
   }

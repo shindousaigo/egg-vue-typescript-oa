@@ -64,17 +64,6 @@
  
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-import {
-  DashboardWorkProcess,
-  DashboardWorkOver,
-  DashboardWorkWait,
-  DashboardWorkAll,
-  ApprovalBase,
-  NotFound,
-  DashboardBase,
-  DashboardComponentRegex,
-  MatchSymbol
-} from "../../../router/const";
 
 @Component<Dashboard>({
   mounted() {
@@ -85,11 +74,11 @@ export default class Dashboard extends Vue {
   get component() {
     return Object.keys(
       this.$router.currentRoute.matched.find(({ path }) =>
-        path.endsWith(MatchSymbol + DashboardComponentRegex)
+        path.endsWith(this.MatchSymbol + this.DashboardComponentRegex)
       ).components
     ).includes(this.$state.route.params.component)
       ? this.$state.route.params.component
-      : NotFound;
+      : this.NotFound;
   }
   @Watch("$state.route.path")
   $state_route_path() {
@@ -97,13 +86,13 @@ export default class Dashboard extends Vue {
     this.$refs.menu["activeIndex"] = activeIndex;
   }
   status = {
-    [DashboardWorkProcess]: "正在办理",
-    [DashboardWorkWait]: "等待办理",
-    [DashboardWorkOver]: "完成办理",
-    [DashboardWorkAll]: "全部办理"
+    [this.DashboardWorkProcess]: "正在办理",
+    [this.DashboardWorkWait]: "等待办理",
+    [this.DashboardWorkOver]: "完成办理",
+    [this.DashboardWorkAll]: "全部办理"
   };
   get workWaitCount() {
-    return this.$getters.user_approval_list_dictionary[DashboardWorkWait]
+    return this.$getters.user_approval_list_dictionary[this.DashboardWorkWait]
       .length;
   }
 }

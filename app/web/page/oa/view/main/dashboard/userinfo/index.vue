@@ -9,7 +9,7 @@
     </div>
     <div class="userinfo-item">
       <el-tag>
-        可用调休： {{ overtimeAvailable }}
+        可用调休： {{ $hours(overtimeAvailable) }}
         <el-popover
           popper-class="userinfo-popper"
           placement="right"
@@ -101,7 +101,7 @@
     </div>
     <div class="userinfo-item">
       <el-tag>
-        年假： {{ annualLeaveAvailable }}
+        年假： {{ $hours(annualLeaveAvailable) }}
         <el-popover
           popper-class="userinfo-popper"
           placement="right"
@@ -194,125 +194,16 @@
 import { Component, Prop, Vue, Inject, Watch } from "vue-property-decorator";
 import * as _ from "lodash";
 import { ACTIONS } from "web/page/oa/store/actions/types";
-@Component<Userinfo>({
-  async created() {
-    this.$dispatch.user_overtime_detail({
-      userid: this.$state.userid
-    });
-    this.$dispatch.user_annual_leave_detail({
-      userid: this.$state.userid
-    });
-    this.$dispatch.leave_type_list();
-  }
-})
-export default class Userinfo extends Vue {
-  static OvertimeTypeMap = ["", "加班", "结算到工资", "HR"];
-  static UserStatusMap = ["实习生", "试用期", "正式员工", "离职员工"];
-  get userinfo() {
-    const _cache = Object.assign(
-      {},
-      this.$state.user_overtime_detail,
-      this.$state.user_annual_leave_detail
-    );
-    const _userinfo = Object.assign(
-      {},
-      this.$getters.user_dictionary
-        ? this.$getters.user_dictionary[this.$state.userid]
-        : {},
-      this.$state.user_info
-    );
-    return Object.assign({}, _cache, _userinfo);
-  }
-  get position() {
-    return this.userinfo.position;
-  }
-  get employeeNumber() {
-    return this.userinfo.employeeNumber;
-  }
-  get telephone() {
-    return this.userinfo.telephone;
-  }
-  get userName() {
-    return this.userinfo.userName;
-  }
-  get userStatus() {
-    return Userinfo.UserStatusMap[this.userinfo.userStatus];
-  }
-  get entryDate() {
-    return this.userinfo.entryDate;
-  }
-  get correctionDate() {
-    return this.userinfo.correctionDate;
-  }
-  get newContractDate() {
-    return this.userinfo.newContractDate;
-  }
-  get contractExpirationDate() {
-    return this.userinfo.contractExpirationDate;
-  }
-  get overtimeInfoList() {
-    if (this.userinfo.user_overtime_detail) {
-      const list = this.userinfo.user_overtime_detail.overtimeInfoList.sort(
-        function(a, b) {
-          return (
-            new Date(b.overtimeDate).getTime() -
-            new Date(a.overtimeDate).getTime()
-          );
-        }
-      );
-      return list;
-    }
-  }
-  get overtimeUseDetailInfoList() {
-    if (this.userinfo.user_overtime_detail) {
-      return this.userinfo.user_overtime_detail.useDetailInfoList;
-    }
-  }
-  get produceDetailInfoList() {
-    if (this.userinfo.user_annual_leave_detail) {
-      return this.userinfo.user_annual_leave_detail.produceDetailInfoList.sort(
-        function(a, b) {
-          return (
-            new Date(b.expireDate).getTime() - new Date(a.expireDate).getTime()
-          );
-        }
-      );
-    }
-  }
-  get annualLeaveUseDetailInfoList() {
-    if (this.userinfo.user_annual_leave_detail) {
-      return this.userinfo.user_annual_leave_detail.useDetailInfoList;
-    }
-  }
-  get overtimeAvailable() {
-    if (this.userinfo.user_overtime_detail) {
-      const add = this.userinfo.user_overtime_detail.overtimeInfoList
-        .map(item => item.overtimeTotal)
-        .reduce((a, b) => a + b);
-      const minus = this.userinfo.user_overtime_detail.useDetailInfoList
-        .map(item => -item.duration)
-        .reduce((a, b) => a + b);
-      return this.$hours(add + minus);
-    }
-  }
-  get annualLeaveAvailable() {
-    if (this.userinfo.user_annual_leave_detail) {
-      return this.$hours(
-        this.userinfo.user_annual_leave_detail.produceDetailInfoList
-          .map(item => item.availableLeave)
-          .reduce((a, b) => a + b)
-      );
-    }
-  }
+import DashboardUserinfoBase from "./_dashboard_userinfo_base";
+
+export default class Userinfo extends DashboardUserinfoBase {
   getOvertimeType(overtimeType) {
-    return Userinfo.OvertimeTypeMap[overtimeType];
+    return DashboardUserinfoBase.OvertimeTypeMap[overtimeType];
   }
   getData(key) {
     return this[key];
   }
-  getLeaveName(
-    row: ACTIONS.User.AnnualLeave.Detail.State["user_annual_leave_detail"]["useDetailInfoList"][0]
-  ) {
+  getLeaveName(row: ACTIONS.User.AnnualLeave.Detail.UseDetailInfoListItem) {
     const type = this.$getters.leave_type_dictionary[row.leaveType];
     return (type && type.leaveName) || "";
   }

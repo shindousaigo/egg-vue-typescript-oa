@@ -26,14 +26,18 @@ export default class OaService extends Service implements Implements {
       return config.data
     })
     this.rgAxios.interceptors.response.use(function (config) {
+      console.log("axios response", config.data)
       if (config.data.code === 200) {
         return config.data.data || {
           code: 200,
           message: config.data.message
         }
       } else {
-        return Promise.reject(config.data);
+        const message = typeof config.data === "string" ? config.data : config.data.message
+        return message;
       }
+    }, function (error) {
+      return error
     })
     this.rgAxios.interceptors.request.use(function (config) {
       if (config.data) {

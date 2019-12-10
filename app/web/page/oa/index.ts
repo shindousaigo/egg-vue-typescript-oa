@@ -11,8 +11,8 @@ import { faUserTag, faFile, faFileAlt, faBan, faCaretSquareDown, faEdit, faTimes
 library.add(faUserTag, faFile, faFileAlt, faBan, faCaretSquareDown, faEdit, faTimes, faInfoCircle, faLongArrowAltUp, faLongArrowAltDown, faEnvelope, faCheckCircle, faEnvelopeOpen)
 
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import * as RouterConstant from "./router/const";
 import { Enum } from "./store/actions";
+import { Const } from "./router/const";
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
@@ -157,8 +157,8 @@ const beforeCreate = function ({ store }) {
       },
     } as DirectiveOptions
   })())
-  Object.keys(RouterConstant).forEach(key => {
-    prototype[key] = RouterConstant[key]
+  Object.keys(Const).forEach(key => {
+    prototype[key] = Const[key]
   })
   prototype.Enum = Enum
   prototype.$attendanceException = (function () {

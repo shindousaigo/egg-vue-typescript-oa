@@ -2,7 +2,7 @@
   <div class="approval demand">
     <card>
       <el-row type="flex">
-        <span class="label">*{{ detail.position.label }}：</span>
+        <span class="label">*{{ description.position.label }}：</span>
         <el-select
           style="width: 180px"
           size="mini"
@@ -20,7 +20,7 @@
         </el-select>
       </el-row>
       <el-row type="flex">
-        <span class="label">*{{ detail.arrivalDate.label }}：</span>
+        <span class="label">*{{ description.arrivalDate.label }}：</span>
         <el-date-picker
           style="width: 180px"
           size="mini"
@@ -31,7 +31,7 @@
         ></el-date-picker>
       </el-row>
       <el-row type="flex">
-        <span class="label">*{{ detail.positionNumber.label }}：</span>
+        <span class="label">*{{ description.positionNumber.label }}：</span>
         <el-input
           style="width: 180px"
           size="mini"
@@ -41,7 +41,7 @@
         ></el-input>
       </el-row>
       <el-row type="flex">
-        <span class="label">*{{ detail.fixedPeople.label }}：</span>
+        <span class="label">*{{ description.fixedPeople.label }}：</span>
         <el-input
           style="width: 180px"
           size="mini"
@@ -51,7 +51,7 @@
         ></el-input>
       </el-row>
       <el-row type="flex">
-        <span class="label">*{{ detail.alreadyPeople.label }}：</span>
+        <span class="label">*{{ description.alreadyPeople.label }}：</span>
         <el-input
           style="width: 180px"
           size="mini"
@@ -61,7 +61,7 @@
         ></el-input>
       </el-row>
       <el-row type="flex">
-        <span class="label">*{{ detail.demandCause.label }}：</span>
+        <span class="label">*{{ description.demandCause.label }}：</span>
         <el-select
           style="width: 180px; margin: 0 16px 0 0;"
           size="mini"
@@ -100,7 +100,9 @@
         </el-select>
       </el-row>
       <el-row type="flex" class="full">
-        <span class="label">*{{ detail.jobResponsibilities.label }}：</span>
+        <span class="label"
+          >*{{ description.jobResponsibilities.label }}：</span
+        >
         <el-input
           autosize
           type="textarea"
@@ -111,7 +113,7 @@
     </card>
     <card addSubmit>
       <el-row type="flex">
-        <span class="label">*{{ detail.age.label }}：</span>
+        <span class="label">*{{ description.age.label }}：</span>
         <el-input
           style="width: 180px"
           size="mini"
@@ -123,7 +125,7 @@
       </el-row>
 
       <el-row type="flex">
-        <span class="label">*{{ detail.education.label }}：</span>
+        <span class="label">*{{ description.education.label }}：</span>
         <el-input
           style="width: 180px"
           size="mini"
@@ -134,7 +136,7 @@
       </el-row>
 
       <el-row type="flex">
-        <span class="label">*{{ detail.profession.label }}：</span>
+        <span class="label">*{{ description.profession.label }}：</span>
         <el-input
           style="width: 180px"
           size="mini"
@@ -145,7 +147,7 @@
       </el-row>
 
       <el-row type="flex">
-        <span class="label">*{{ detail.gender.label }}：</span>
+        <span class="label">*{{ description.gender.label }}：</span>
         <el-select
           style="width: 180px"
           size="mini"
@@ -161,7 +163,7 @@
         </el-select>
       </el-row>
       <el-row type="flex">
-        <span class="label">*{{ detail.salaryRange.label }}：</span>
+        <span class="label">*{{ description.salaryRange.label }}：</span>
         <el-input
           type="number"
           style="width: 180px"
@@ -183,7 +185,7 @@
       </el-row>
       <el-row type="flex" class="full" style="flex-direction: column;">
         <span class="label full">
-          {{ detail.specialRequirements.label }}：
+          {{ description.specialRequirements.label }}：
         </span>
         <el-row type="flex" style="margin-top: 8px; margin-bottom: 0;">
           <el-input
@@ -194,7 +196,7 @@
         </el-row>
       </el-row>
       <el-row type="flex" class="full" style="flex-direction: column;">
-        <span class="label full"> {{ detail.annexPath.label }}： </span>
+        <span class="label full"> {{ description.annexPath.label }}： </span>
         <el-row type="flex" style="margin-top: 8px; margin-bottom: 0;">
           <el-upload
             ref="upload"
@@ -218,16 +220,17 @@
  
 <script lang="ts">
 import { Component, Prop, Vue, Watch, Provide } from "vue-property-decorator";
-import Base, { ApprovalParamsModel, ApprovalParamsDemand } from "../base";
+import { ACTIONS } from "../../../../store/actions/types";
+import ApprovalApplicationBase from "./_approval_application_base";
 
 @Component<Demand>({
   components: {
-    card: require(`../card.vue`).default
+    card: require(`./_item/card.vue`).default
   },
   created() {}
 })
-export default class Demand extends Base {
-  params: typeof Base[ApprovalParamsModel][ApprovalParamsDemand];
+export default class Demand extends ApprovalApplicationBase {
+  params: ACTIONS.Approval.Application.Params.Demand;
   establishment = "";
   establishmentOption = [
     {

@@ -1,18 +1,18 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-import { DashboardView, ApprovalView, BackstageView, AsideView, HeaderView, DashboardWorkView, DashboardAttendanceView, DashboardUserinfoView, BackstageUserTableView, BackstageLeaveInfoTableView, BackstageUserEditView, BackstageDepartmentTreeView, ApprovalAttendanceView, ApprovalDemandView, NotFoundView, ApprovalApplicationDetailView, ApprovalOvertimeView } from "./vues";
-import { DashboardBase, DashboardWorkAll, DashboardAttendance, OtherRegex, Separator, BackstageBase, OaBase, DashboardUserinfo, BackstageUserTable, BackstageLeaveInfoTable, BackstageUserEdit, ApprovalAttendance, ApprovalBase, ApprovalDemand, ApprovalComponentRegex, NotFound, DashboardWorkProcess, DashboardWorkWait, DashboardWorkOver, DashboardComponentRegex, ApprovalApplicationDetail, MatchSymbol, BackstageUseridRegex, ApprovalApplicationDetailComponentRegex, ApprovalApplicationDetailSerialNumberRegex, ApprovalOvertime } from "./const";
+import { DashboardView, ApprovalView, BackstageView, AsideView, HeaderView, DashboardWorkView, DashboardAttendanceView, DashboardUserinfoView, BackstageUserTableView, BackstageLeaveInfoTableView, BackstageUserEditView, BackstageDepartmentTreeView, ApprovalAttendanceView, ApprovalDemandView, NotFoundView, ApprovalApplicationDetailView, ApprovalOvertimeView, ApprovalLeaveView } from "./vues";
+import { Const } from "./const";
 
 Vue.use(VueRouter);
 
-function components(component: any, base = OaBase): any {
+function components(component: any, base = Const.OaBase): any {
   return {
-    [OaBase]: {
+    [Const.OaBase]: {
       default: () => component,
       aside: () => AsideView,
       header: () => HeaderView,
     },
-    [BackstageBase]: {
+    [Const.BackstageBase]: {
       default: () => component,
       tree: () => BackstageDepartmentTreeView
     },
@@ -20,75 +20,76 @@ function components(component: any, base = OaBase): any {
 }
 
 const DashboardConfig = {
-  path: DashboardBase,
+  path: Const.DashboardBase,
   components: components(DashboardView),
   children: [
     {
       path: '',
-      redirect: [DashboardBase, DashboardWorkAll].join(Separator),
+      redirect: [Const.DashboardBase, Const.DashboardWorkAll].join(Const.Separator),
     },
     {
-      path: MatchSymbol + DashboardComponentRegex,
+      path: Const.MatchSymbol + Const.DashboardComponentRegex,
       components: {
-        [DashboardWorkAll]: () => DashboardWorkView,
-        [DashboardWorkProcess]: () => DashboardWorkView,
-        [DashboardWorkWait]: () => DashboardWorkView,
-        [DashboardWorkOver]: () => DashboardWorkView,
-        [DashboardUserinfo]: () => DashboardUserinfoView,
-        [DashboardAttendance]: () => DashboardAttendanceView,
-        [NotFound]: () => NotFoundView,
+        [Const.DashboardWorkAll]: () => DashboardWorkView,
+        [Const.DashboardWorkProcess]: () => DashboardWorkView,
+        [Const.DashboardWorkWait]: () => DashboardWorkView,
+        [Const.DashboardWorkOver]: () => DashboardWorkView,
+        [Const.DashboardUserinfo]: () => DashboardUserinfoView,
+        [Const.DashboardAttendance]: () => DashboardAttendanceView,
+        [Const.NotFound]: () => NotFoundView,
       }
     },
   ]
 }
 const ApprovalConfig = {
-  path: ApprovalBase,
+  path: Const.ApprovalBase,
   components: components(ApprovalView),
   children: [
     {
-      name: ApprovalApplicationDetail,
-      path: ApprovalApplicationDetail,
+      name: Const.ApprovalApplicationDetail,
+      path: Const.ApprovalApplicationDetail,
       component: () => ApprovalApplicationDetailView,
       children: [
         {
-          name: ApprovalApplicationDetail,
-          path: [MatchSymbol + ApprovalApplicationDetailComponentRegex, MatchSymbol + ApprovalApplicationDetailSerialNumberRegex].join(Separator),
+          name: Const.ApprovalApplicationDetail,
+          path: [Const.MatchSymbol + Const.ApprovalApplicationDetailComponentRegex, Const.MatchSymbol + Const.ApprovalApplicationDetailSerialNumberRegex].join(Const.Separator),
           component: () => ApprovalApplicationDetailView
         }
       ]
     },
     {
-      path: MatchSymbol + ApprovalComponentRegex,
+      path: Const.MatchSymbol + Const.ApprovalComponentRegex,
       components: {
-        [NotFound]: () => NotFoundView,
-        [ApprovalAttendance]: () => ApprovalAttendanceView,
-        [ApprovalDemand]: () => ApprovalDemandView,
-        [ApprovalOvertime]: () => ApprovalOvertimeView,
+        [Const.NotFound]: () => NotFoundView,
+        [Const.ApprovalAttendance]: () => ApprovalAttendanceView,
+        [Const.ApprovalDemand]: () => ApprovalDemandView,
+        [Const.ApprovalOvertime]: () => ApprovalOvertimeView,
+        [Const.ApprovalLeave]: () => ApprovalLeaveView,
       }
     }
   ]
 }
 const BackstageConfig = {
-  path: BackstageBase,
-  redirect: [BackstageBase, BackstageUserTable].join(Separator),
+  path: Const.BackstageBase,
+  redirect: [Const.BackstageBase, Const.BackstageUserTable].join(Const.Separator),
   components: components(BackstageView),
   children: [
     {
-      name: BackstageUserTable,
-      path: BackstageUserTable,
-      components: components(BackstageUserTableView, BackstageBase),
+      name: Const.BackstageUserTable,
+      path: Const.BackstageUserTable,
+      components: components(BackstageUserTableView, Const.BackstageBase),
     },
     {
-      path: BackstageLeaveInfoTable,
-      components: components(BackstageLeaveInfoTableView, BackstageBase),
+      path: Const.BackstageLeaveInfoTable,
+      components: components(BackstageLeaveInfoTableView, Const.BackstageBase),
     },
     {
-      path: BackstageUserEdit + Separator + MatchSymbol + BackstageUseridRegex,
-      components: components(BackstageUserEditView, BackstageBase),
+      path: Const.BackstageUserEdit + Const.Separator + Const.MatchSymbol + Const.BackstageUseridRegex,
+      components: components(BackstageUserEditView, Const.BackstageBase),
     },
     {
-      path: OtherRegex,
-      redirect: [BackstageBase, BackstageUserTable].join(Separator),
+      path: Const.OtherRegex,
+      redirect: [Const.BackstageBase, Const.BackstageUserTable].join(Const.Separator),
     }
   ]
 }
@@ -96,14 +97,14 @@ const BackstageConfig = {
 export default function createRouter() {
   return new VueRouter({
     mode: 'history',
-    base: OaBase,
+    base: Const.OaBase,
     routes: [
       DashboardConfig,
       ApprovalConfig,
       BackstageConfig,
       {
-        path: OtherRegex,
-        redirect: DashboardBase,
+        path: Const.OtherRegex,
+        redirect: Const.DashboardBase,
       },
     ]
   })

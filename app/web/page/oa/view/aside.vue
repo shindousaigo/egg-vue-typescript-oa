@@ -55,12 +55,6 @@
 <script lang="ts">
 import { Component, Prop, Vue, Inject, Watch } from "vue-property-decorator";
 import IScroll from "iscroll";
-import {
-  ApprovalBase,
-  ApprovalComponentRegex,
-  ApprovalApplicationDetailComponentRegex,
-  Separator
-} from "../router/const";
 
 @Component<AsideMenu>({
   async mounted() {
@@ -98,18 +92,18 @@ export default class AsideMenu extends Vue {
   @Watch("$state.route.path")
   $state_route_path() {
     let activeIndex;
-    if (this.$state.route.path.startsWith(ApprovalBase)) {
+    if (this.$state.route.path.startsWith(this.ApprovalBase)) {
       activeIndex = [
-        ApprovalBase,
-        this.$state.route.params[ApprovalComponentRegex] ||
-          this.$state.route.params[ApprovalApplicationDetailComponentRegex]
-      ].join(Separator);
+        this.ApprovalBase,
+        this.$state.route.params[this.ApprovalComponentRegex] ||
+          this.$state.route.params[this.ApprovalApplicationDetailComponentRegex]
+      ].join(this.Separator);
     } else {
       activeIndex = this.$state.route.path.match(/\/\w*/)[0];
     }
     this.$refs.menu["activeIndex"] = activeIndex;
   }
-  defaultOpeneds = [ApprovalBase];
+  defaultOpeneds = [this.ApprovalBase];
   initScroller() {
     this.scroller = new IScroll("#aside-scroll-wrapper", {
       mouseWheel: true,

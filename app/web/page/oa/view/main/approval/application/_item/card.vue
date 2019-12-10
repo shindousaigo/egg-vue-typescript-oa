@@ -1,11 +1,8 @@
 <template>
-  <el-card
-    class="card-submit"
-    :class="addSubmit === undefined ? `` : `add-submit`"
-  >
+  <el-card class="card-submit" :class="addSubmit === null ? `` : `add-submit`">
     <slot />
     <el-button
-      v-if="addSubmit !== undefined"
+      v-if="addSubmit !== null"
       type="primary"
       class="submit"
       v-required="submit"
@@ -17,13 +14,20 @@
  
 <script lang="ts">
 import { Component, Prop, Vue, Watch, Inject } from "vue-property-decorator";
-import Base from "./base";
+import ApprovalApplicationBase from "../_approval_application_base";
 
 @Component<CardSubmit>({})
 export default class CardSubmit extends Vue {
-  @Prop() addSubmit!: boolean;
-  @Inject("provider") provider: Base;
-  submit = this.provider.submit
+  @Prop({
+    default: null
+  })
+  addSubmit!: boolean;
+  @Inject({
+    from: "provider",
+    default: {}
+  })
+  provider: ApprovalApplicationBase;
+  submit = this.provider.submit;
 }
 </script>
 

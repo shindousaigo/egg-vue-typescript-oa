@@ -1,5 +1,5 @@
-import { DashboardWorkAll, DashboardWorkProcess, DashboardWorkWait, DashboardWorkOver } from "../../router/const";
 import { ACTIONS } from "../actions/types";
+import { Const } from "../../router/const";
 
 export namespace GETTERS {
 
@@ -32,9 +32,9 @@ export namespace GETTERS {
     } | undefined
     namespace Approval {
       namespace List {
-        type wait = typeof DashboardWorkWait
-        type process = typeof DashboardWorkProcess
-        type over = typeof DashboardWorkOver
+        type wait = typeof Const.DashboardWorkWait
+        type process = typeof Const.DashboardWorkProcess
+        type over = typeof Const.DashboardWorkOver
         interface Item extends ACTIONS.User.Approval.List.Item {
           type: wait | process | over
         }
@@ -55,9 +55,9 @@ export namespace GETTERS {
 
   namespace Leave {
     namespace Type {
-      interface Dictionary {
+      type Dictionary = {
         [type: string]: ACTIONS.Leave.Type.List.LeaveType
-      }
+      } | undefined
     }
   }
 

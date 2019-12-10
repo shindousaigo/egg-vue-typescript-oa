@@ -42,8 +42,12 @@
     <card style="padding-bottom: 40px;">
       <div v-for="item in detailList" :key="item">
         <el-row type="flex" v-if="approvalApplicationDetail[item]">
-          <span class="label" style="max-width: 118px;"> {{ detail[item].label }}：</span>
-          <span v-html="detail[item].value(approvalApplicationDetail, item)" />
+          <span class="label" style="max-width: 118px;">
+            {{ description[item].label }}：</span
+          >
+          <span
+            v-html="description[item].value(approvalApplicationDetail, item)"
+          />
         </el-row>
       </div>
 
@@ -78,15 +82,9 @@
  
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-import {
-  ApprovalApplicationDetailComponentRegex,
-  ApprovalApplicationDetailSerialNumberRegex,
-  Separator,
-  DashboardBase
-} from "web/page/oa/router/const";
 import { ACTIONS } from "web/page/oa/store/actions/types";
 import { Enum } from "web/page/oa/store/actions/index";
-import Base from "./base";
+import ApprovalApplicationConfig from "./application/_approval_application_config";
 
 @Component<ApplicationDetail>({
   async created() {
@@ -94,10 +92,10 @@ import Base from "./base";
     this.handleApprovalList();
   },
   components: {
-    card: require("./card.vue").default
+    card: require("./application/_item/card.vue").default
   }
 })
-export default class ApplicationDetail extends Base {
+export default class ApplicationDetail extends ApprovalApplicationConfig {
   nonnull = "无";
   approvalApplicationDetail?: ACTIONS.Approval.Application.Detail.State = "" as any;
   approvalList?: ACTIONS.Approval.List.State = "" as any;
@@ -106,11 +104,15 @@ export default class ApplicationDetail extends Base {
   nextApproverName: string[] = [];
 
   get applicationDetailComponent() {
-    return this.$state.route.params[ApprovalApplicationDetailComponentRegex];
+    return this.$state.route.params[
+      this.ApprovalApplicationDetailComponentRegex
+    ];
   }
 
   get applicationDetailSerialNumber() {
-    return this.$state.route.params[ApprovalApplicationDetailSerialNumberRegex];
+    return this.$state.route.params[
+      this.ApprovalApplicationDetailSerialNumberRegex
+    ];
   }
 
   get createTime() {
@@ -184,7 +186,7 @@ export default class ApplicationDetail extends Base {
   }
 
   get detailList() {
-    return Object.keys(this.detail);
+    return Object.keys(this.description);
   }
 
   handleApprovalApplication() {
@@ -224,7 +226,7 @@ export default class ApplicationDetail extends Base {
       const data = Object.assign({}, this.curApprovalInfo, { approvalResult });
       this.$dispatch.approval_confirm(data).then(data => {
         this.$router.push({
-          path: DashboardBase
+          path: this.DashboardBase
         });
       });
     }
