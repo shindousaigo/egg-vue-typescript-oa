@@ -12,10 +12,10 @@
           v-required="params.position"
         >
           <el-option
-            v-for="option in departmentOptions"
-            :key="option.id"
-            :value="option.id"
-            :label="option.name"
+            v-for="option in options.department"
+            :key="option.value"
+            :value="option.value"
+            :label="option.label"
           ></el-option>
         </el-select>
       </el-row>
@@ -244,20 +244,6 @@ export default class Demand extends ApprovalApplicationBase {
   ];
   salaryRangeMin = "";
   salaryRangeMax = "";
-
-  get departmentOptions() {
-    if (this.$getters.department_id_dictionary) {
-      let departmentOptions = Object.keys(
-        this.$getters.department_id_dictionary
-      )
-        .filter(
-          id => !this.$getters.department_id_dictionary[id].children.length
-        )
-        .map(id => this.$getters.department_id_dictionary[id]);
-      return departmentOptions;
-    }
-  }
-
   salaryRangeChange() {
     this.params.salaryRange = [this.salaryRangeMin, this.salaryRangeMax].join(
       ","

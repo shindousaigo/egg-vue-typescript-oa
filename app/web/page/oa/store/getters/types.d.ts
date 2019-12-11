@@ -5,12 +5,12 @@ export namespace GETTERS {
 
   namespace Department {
     type Tree = ACTIONS.Department.List.Item & {
-      children?: Tree[]
+      children: Tree[]
     }
     namespace ID {
       type Dictionary = {
         [id: string]: Tree
-      } | undefined
+      } 
     }
   }
 

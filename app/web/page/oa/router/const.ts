@@ -22,10 +22,15 @@ export namespace Const {
   export const ApprovalApplicationDetail = 'application-detail'
   export const ApprovalApplicationDetailComponentRegex = 'adcomponent'
   export const ApprovalApplicationDetailSerialNumberRegex = 'adserial'
-  export const ApprovalAttendance = 'attendance'
-  export const ApprovalOvertime = 'overtime'
-  export const ApprovalDemand = 'demand'
-  export const ApprovalLeave = 'leave'
+
+  export enum ApprovalApplication {
+    attendance = 'attendance',
+    overtime = 'overtime',
+    demand = 'demand',
+    leave = 'leave',
+    admission = 'admission',
+    dismission = 'dismission'
+  }
 
   export const BackstageBase = '/backstage'
   export const BackstageUserTable = 'user-table'

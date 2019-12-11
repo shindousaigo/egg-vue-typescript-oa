@@ -36,7 +36,7 @@ export default class Getters {
         }
       }
     },
-    get department_id_dictionary(): GETTERS.Department.ID.Dictionary {
+    get department_id_dictionary(): GETTERS.Department.ID.Dictionary | undefined {
       // @ts-ignore
       return function (state: State, getters: Getters[GettersMethods]) {
         if (state.department_list.length && getters.department_tree) {

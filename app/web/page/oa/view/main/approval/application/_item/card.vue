@@ -5,6 +5,7 @@
       v-if="addSubmit !== null"
       type="primary"
       class="submit"
+      :disabled="isDisabled"
       v-required="submit"
     >
       提交
@@ -27,7 +28,15 @@ export default class CardSubmit extends Vue {
     default: {}
   })
   provider: ApprovalApplicationBase;
-  submit = this.provider.submit;
+  async submit(error) {
+    this.isDisabled = true;
+    await this.provider.submit(error);
+    this.isDisabled = false;
+  }
+  isDisabled = false;
+  submitClick() {
+    console.log("submitClick");
+  }
 }
 </script>
 

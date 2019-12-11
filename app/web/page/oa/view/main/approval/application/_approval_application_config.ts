@@ -2,6 +2,7 @@ import { Vue } from "vue-property-decorator";
 import moment from "moment"
 import { ACTIONS } from "../../../../store/actions/types";
 import { RgServerBaseUrl } from "../../../../const_oa";
+import { Const } from "../../../../router/const";
 
 export default class ApprovalApplicationConfig extends Vue {
 
@@ -29,164 +30,258 @@ export default class ApprovalApplicationConfig extends Vue {
   }
 
   get options() {
-    return ApprovalApplicationConfig.OptionsModel[this.component] || {}
+    return ApprovalApplicationConfig.OptionsModel
   }
 
   get description() {
-    return ApprovalApplicationConfig.DescpritionModel[this.component] || {}
+    const model = ApprovalApplicationConfig.DescpritionModel
+    return model[this.component] || {}
   }
 
-  static ParamsModel = {
-    [ApprovalApplicationConfig.instance.ApprovalAttendance]: {
-      /** 申请类型 */
-      applicationType: "1",
-      /** 申请人 */
-      userId: ApprovalApplicationConfig.instance.$state.userid,
-      /** 需求部门id */
-      get departmentId() { return ApprovalApplicationConfig.instance.departmentId },
-      /** 申请日期	 */
-      get applicationDate() { return ApprovalApplicationConfig.instance.applicationDate },
-      /** 补签日期 */
-      checkInDate: "",
-      /** 补签原因 */
-      checkInType: "",
-      /** 补签时段 */
-      timeSlot: "",
-      /** 补签备注 */
-      reason: "",
-      /** 文件列表 */
-      fileList: ""
-    },
-    [ApprovalApplicationConfig.instance.ApprovalOvertime]: {
-      /** 申请类型 */
-      applicationType: "2",
-      /** 申请人 */
-      userId: ApprovalApplicationConfig.instance.$state.userid,
-      /** 需求部门id */
-      get departmentId() { return ApprovalApplicationConfig.instance.departmentId },
-      /** 申请日期	 */
-      get applicationDate() { return ApprovalApplicationConfig.instance.applicationDate },
-      reason: "",
-      startTime: "",
-      endTime: "",
-      duration: "",
-    },
-    [ApprovalApplicationConfig.instance.ApprovalLeave]: {
-      /** 申请类型 */
-      applicationType: "3",
-      /** 申请人	 */
-      userId: ApprovalApplicationConfig.instance.$state.$state.userid,
-      /** 需求部门id */
-      get departmentId() { return ApprovalApplicationConfig.instance.departmentId },
-      /** 申请日期	 */
-      get applicationDate() { return ApprovalApplicationConfig.instance.applicationDate },
-      leaveType: "",
-      childrenType: "",
-      startTime: "",
-      endTime: "",
-      duration: 0,
-      reason: "",
-      handover: "",
-    },
-    [ApprovalApplicationConfig.instance.ApprovalDemand]: {
-      /** 申请类型 */
-      applicationType: "6",
-      /** 申请人 */
-      userId: ApprovalApplicationConfig.instance.$state.userid,
-      /** 需求部门id */
-      get departmentId() { return ApprovalApplicationConfig.instance.departmentId },
-      /** 申请日期	 */
-      get applicationDate() { return ApprovalApplicationConfig.instance.applicationDate },
-      /** 需求岗位 */
-      position: "",
-      /** 需求人数 */
-      positionNumber: "",
-      /** 期待到岗日 */
-      arrivalDate: "",
-      /** 岗位定编人数 */
-      fixedPeople: "",
-      /** 岗位现有人数 */
-      alreadyPeople: "",
-      /** 需求原因 */
-      demandCause: "",
-      /** 主要工作职责 */
-      jobResponsibilities: "",
-      /** 年龄 */
-      age: "",
-      /** 学历 */
-      education: "",
-      /** 专业 */
-      profession: "",
-      /** 性别 */
-      gender: "0",
-      /** 建议薪资范围 */
-      salaryRange: "",
-      /** 特殊要求 */
-      specialRequirements: "",
-      /** 文件列表 */
-      fileList: ""
-    },
-  }
+  static ParamsModel: {
+    [key in keyof typeof Const.ApprovalApplication]: any
+  } = {
+      [ApprovalApplicationConfig.instance.ApprovalApplication.attendance]: {
+        /** 申请类型 */
+        applicationType: "1",
+        /** 申请人 */
+        userId: ApprovalApplicationConfig.instance.$state.userid,
+        /** 需求部门id */
+        get departmentId() { return ApprovalApplicationConfig.instance.departmentId },
+        /** 申请日期	 */
+        get applicationDate() { return ApprovalApplicationConfig.instance.applicationDate },
+        /** 补签日期 */
+        checkInDate: "",
+        /** 补签原因 */
+        checkInType: "",
+        /** 补签时段 */
+        timeSlot: "",
+        /** 补签备注 */
+        reason: "",
+        /** 文件列表 */
+        fileList: ""
+      },
+      [ApprovalApplicationConfig.instance.ApprovalApplication.overtime]: {
+        /** 申请类型 */
+        applicationType: "2",
+        /** 申请人 */
+        userId: ApprovalApplicationConfig.instance.$state.userid,
+        /** 需求部门id */
+        get departmentId() { return ApprovalApplicationConfig.instance.departmentId },
+        /** 申请日期	 */
+        get applicationDate() { return ApprovalApplicationConfig.instance.applicationDate },
+        reason: "",
+        startTime: "",
+        endTime: "",
+        duration: "",
+      },
+      [ApprovalApplicationConfig.instance.ApprovalApplication.leave]: {
+        /** 申请类型 */
+        applicationType: "3",
+        /** 申请人	 */
+        userId: ApprovalApplicationConfig.instance.$state.userid,
+        /** 需求部门id */
+        get departmentId() { return ApprovalApplicationConfig.instance.departmentId },
+        /** 申请日期	 */
+        get applicationDate() { return ApprovalApplicationConfig.instance.applicationDate },
+        leaveType: "",
+        childrenType: "",
+        startTime: "",
+        endTime: "",
+        duration: 0,
+        reason: "",
+        handover: "",
+      },
+      [ApprovalApplicationConfig.instance.ApprovalApplication.admission]: {
+        /** 申请类型 */
+        applicationType: "4",
+        /** 申请人	 */
+        userId: ApprovalApplicationConfig.instance.$state.userid,
+        /** 需求部门id */
+        get departmentId() { return ApprovalApplicationConfig.instance.departmentId },
+        /** 申请日期	 */
+        get applicationDate() { return ApprovalApplicationConfig.instance.applicationDate },
+        /** 工号 */
+        employeeNumber: "",
+        /** 中文名 */
+        userNameCn: "",
+        /** 英文名 */
+        userNameEn: "",
+        /** 入职时间 */
+        entryDate: "",
+        /** 所属公司 */
+        companyId: "",
+        /** 所属部门 */
+        departmentName: "",
+        /** 职位名称 */
+        position: "",
+        /** 业务导师 */
+        businessTutorUserName: "",
+        /** 汇报上级 */
+        spervisorUserName: "",
+        /** 电脑配置 */
+        computerConfiguration: "",
+        /** 办公用品 */
+        isOfficeSupplies: "",
+        /** 其他配置 */
+        otherConfiguration: "",
+        /** 可上传文件 */
+        fileList: ""
+      },
+      [ApprovalApplicationConfig.instance.ApprovalApplication.demand]: {
+        /** 申请类型 */
+        applicationType: "6",
+        /** 申请人 */
+        userId: ApprovalApplicationConfig.instance.$state.userid,
+        /** 需求部门id */
+        get departmentId() { return ApprovalApplicationConfig.instance.departmentId },
+        /** 申请日期	 */
+        get applicationDate() { return ApprovalApplicationConfig.instance.applicationDate },
+        /** 需求岗位 */
+        position: "",
+        /** 需求人数 */
+        positionNumber: "",
+        /** 期待到岗日 */
+        arrivalDate: "",
+        /** 岗位定编人数 */
+        fixedPeople: "",
+        /** 岗位现有人数 */
+        alreadyPeople: "",
+        /** 需求原因 */
+        demandCause: "",
+        /** 主要工作职责 */
+        jobResponsibilities: "",
+        /** 年龄 */
+        age: "",
+        /** 学历 */
+        education: "",
+        /** 专业 */
+        profession: "",
+        /** 性别 */
+        gender: "0",
+        /** 建议薪资范围 */
+        salaryRange: "",
+        /** 特殊要求 */
+        specialRequirements: "",
+        /** 文件列表 */
+        fileList: ""
+      }, [ApprovalApplicationConfig.instance.ApprovalApplication.dismission]: {},
+    }
+
+  static Cache = {}
 
   static OptionsModel = {
-    [ApprovalApplicationConfig.instance.ApprovalAttendance]: {
-      checkInType: [
-        {
-          label: "忘记打卡",
-          value: "1"
-        },
-        {
-          label: "外出办事",
-          value: "2"
-        }
-      ],
-      timeSlot: [
-        {
-          label: "上班",
-          value: "1"
-        },
-        {
-          label: "下班",
-          value: "2"
-        },
-        {
-          label: "全天",
-          value: "3"
-        }
-      ]
+    checkInType: [
+      {
+        label: "忘记打卡",
+        value: "1"
+      },
+      {
+        label: "外出办事",
+        value: "2"
+      }
+    ],
+    timeSlot: [
+      {
+        label: "上班",
+        value: "1"
+      },
+      {
+        label: "下班",
+        value: "2"
+      },
+      {
+        label: "全天",
+        value: "3"
+      }
+    ],
+    demandCause: [
+      { value: "1", label: "离职补充" },
+      { value: "2", label: "员工内部调动补充" },
+      { value: "3", label: "拟替换不合格者" },
+      { value: "4", label: "工作量增加" },
+      { value: "5", label: "新业务拓展" },
+    ],
+    gender: [
+      {
+        label: "不限",
+        value: "0"
+      },
+      {
+        label: "男",
+        value: "1"
+      },
+      {
+        label: "女",
+        value: "2"
+      },
+    ],
+    get department() {
+      const $cache = ApprovalApplicationConfig.instance.$cache, CacheKey = 'OptionsModel.department'
+      if ($cache.get(CacheKey)) {
+        return $cache.get(CacheKey)
+      }
+      const dictionary = ApprovalApplicationConfig.instance.$getters.department_id_dictionary
+      if (dictionary) {
+        let options = Object.keys(dictionary)
+          .filter(
+            id => !dictionary[id].children.length
+          )
+          .map(id => ({
+            value: id,
+            label: dictionary[id].name,
+          }));
+        $cache.set(CacheKey, options)
+        return options
+      }
     },
-    [ApprovalApplicationConfig.instance.ApprovalDemand]: {
-      demandCause: [
-        { value: "1", label: "离职补充" },
-        { value: "2", label: "员工内部调动补充" },
-        { value: "3", label: "拟替换不合格者" },
-        { value: "4", label: "工作量增加" },
-        { value: "5", label: "新业务拓展" },
-      ],
-      gender: [
-        {
-          label: "不限",
-          value: "0"
-        },
-        {
-          label: "男",
-          value: "1"
-        },
-        {
-          label: "女",
-          value: "2"
-        },
-      ]
-    }
+    companyId: [
+      {
+        value: "0",
+        label: "逍遥盛世"
+      },
+      {
+        value: "1",
+        label: "昊立信"
+      },
+    ],
+    computerConfiguration: [
+      {
+        value: "1",
+        label: "普通电脑标配"
+      },
+      {
+        value: "2",
+        label: "美术电脑+手写板"
+      },
+      {
+        value: "3",
+        label: "普通电脑标配+固态硬盘"
+      },
+      {
+        value: "4",
+        label: "内外网双机"
+      },
+    ],
+    isOfficeSupplies: [
+      {
+        value: "0",
+        label: "未准备"
+      },
+      {
+        value: "1",
+        label: "已准备"
+      }
+    ]
   }
 
-  private static DescriptionModelTpl(label: string, valuefn?: string | ((applicationDetail: ACTIONS.Approval.Application.Detail.State, key: string) => string)) {
+  private static DescriptionModelTpl(label: string, valuefn?: string | ((detail: ACTIONS.Approval.Application.Detail.State, key: string) => string)) {
     return {
       label,
-      value(applicationDetail: ACTIONS.Approval.Application.Detail.State, key: string) {
+      value(detail: ACTIONS.Approval.Application.Detail.State, key: string) {
         if (valuefn) {
           if (typeof valuefn === 'string') {
-            const ddq = applicationDetail[key].split(valuefn)
+            const ddq = detail[key].split(valuefn)
             if (ApprovalApplicationConfig.instance.options[key]) {
               return ddq.map(item => {
                 return ApprovalApplicationConfig.instance.options[key].find(option => option.value == item).label
@@ -197,24 +292,24 @@ export default class ApprovalApplicationConfig extends Vue {
               }).join('，')
             }
           } else {
-            return valuefn(applicationDetail, key)
+            return valuefn(detail, key)
           }
         } else {
-          return ApprovalApplicationConfig.instance.options[key] ? ApprovalApplicationConfig.instance.options[key].find(option => option.value == applicationDetail[key]).label :
-            (applicationDetail[key] + "").replace(/\n/g, '</br>')
+          return ApprovalApplicationConfig.instance.options[key] ? ApprovalApplicationConfig.instance.options[key].find(option => option.value == detail[key]).label :
+            (detail[key] + "").replace(/\n/g, '</br>')
         }
       }
     }
   }
 
   static DescpritionModel = {
-    [ApprovalApplicationConfig.instance.ApprovalAttendance]: {
+    [ApprovalApplicationConfig.instance.ApprovalApplication.attendance]: {
       checkInDate: ApprovalApplicationConfig.DescriptionModelTpl("补签日期", ","),
       checkInType: ApprovalApplicationConfig.DescriptionModelTpl("补签原因", ","),
       timeSlot: ApprovalApplicationConfig.DescriptionModelTpl("补签时段", ","),
       reason: ApprovalApplicationConfig.DescriptionModelTpl("补签备注", "|"),
     },
-    [ApprovalApplicationConfig.instance.ApprovalOvertime]: {
+    [ApprovalApplicationConfig.instance.ApprovalApplication.overtime]: {
       startTime: ApprovalApplicationConfig.DescriptionModelTpl("加班时段", function (detail: any, key) {
         const startTime = detail.startTime.split(',')
         const endTime = detail.endTime.split(',')
@@ -225,7 +320,48 @@ export default class ApprovalApplicationConfig extends Vue {
       duration: ApprovalApplicationConfig.DescriptionModelTpl("加班时效", ","),
       reason: ApprovalApplicationConfig.DescriptionModelTpl("加班事由", ","),
     },
-    [ApprovalApplicationConfig.instance.ApprovalDemand]: {
+    [ApprovalApplicationConfig.instance.ApprovalApplication.leave]: {
+      leaveType: ApprovalApplicationConfig.DescriptionModelTpl("休假类别", function (detail, key) {
+        const id = detail[key]
+        if (ApprovalApplicationConfig.instance.$getters.leave_type_dictionary) {
+          let add = "", item = ApprovalApplicationConfig.instance.$getters.leave_type_dictionary[id]
+          if (item.children) {
+            const find = item.children.find(_ => _.id === Number(detail.childrenType))
+            add = find ? `（${find.leaveName}）` : add
+          }
+          return item.leaveName + add
+        }
+        return id
+      }),
+      startTime: ApprovalApplicationConfig.DescriptionModelTpl('休假时段', function (detail, key) {
+        return [detail.startTime, detail.endTime].join(' 至 ') + '</br>' + '时段时效：' + ApprovalApplicationConfig.instance.$hours(detail.duration)
+      }),
+      reason: ApprovalApplicationConfig.DescriptionModelTpl('请假事由'),
+      handover: ApprovalApplicationConfig.DescriptionModelTpl('交接事项'),
+    },
+    [ApprovalApplicationConfig.instance.ApprovalApplication.admission]: {
+      employeeNumber: ApprovalApplicationConfig.DescriptionModelTpl('工号'),
+      userNameCn: ApprovalApplicationConfig.DescriptionModelTpl('中文名'),
+      userNameEn: ApprovalApplicationConfig.DescriptionModelTpl('英文名'),
+      entryDate: ApprovalApplicationConfig.DescriptionModelTpl('入职时间', function (detail) {
+        return detail.entryDate.slice(0, 10)
+      }),
+      companyId: ApprovalApplicationConfig.DescriptionModelTpl('所属公司'),
+      departmentName: ApprovalApplicationConfig.DescriptionModelTpl('所属部门'),
+      position: ApprovalApplicationConfig.DescriptionModelTpl('职位名称'),
+      businessTutorUserName: ApprovalApplicationConfig.DescriptionModelTpl('业务导师'),
+      spervisorUserName: ApprovalApplicationConfig.DescriptionModelTpl('汇报上级'),
+      computerConfiguration: ApprovalApplicationConfig.DescriptionModelTpl('电脑配置'),
+      isOfficeSupplies: ApprovalApplicationConfig.DescriptionModelTpl('办公用品'),
+
+      otherConfiguration: ApprovalApplicationConfig.DescriptionModelTpl('其他配置'),
+
+      annexPath: ApprovalApplicationConfig.DescriptionModelTpl("附件", function (detail, key) {
+        const path = detail[key]
+        return `<a href="${RgServerBaseUrl + '/file/download?filePath=' + path}" target="_blank">查看</a>`
+      }),
+    },
+    [ApprovalApplicationConfig.instance.ApprovalApplication.demand]: {
       age: ApprovalApplicationConfig.DescriptionModelTpl("年龄"),
       education: ApprovalApplicationConfig.DescriptionModelTpl("学历"),
       profession: ApprovalApplicationConfig.DescriptionModelTpl("专业"),
@@ -285,6 +421,4 @@ export default class ApprovalApplicationConfig extends Vue {
   get period() {
     return ApprovalApplicationConfig.PeriodModel
   }
-
-
 }

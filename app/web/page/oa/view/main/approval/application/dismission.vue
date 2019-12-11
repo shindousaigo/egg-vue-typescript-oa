@@ -146,7 +146,7 @@ const BaseMix = ApprovalApplicationBase.extend(DashboardUserinfoBase);
 @Component<Leave>({
   components: {
     card: require(`./_item/card.vue`).default
-  }
+  },
 })
 export default class Leave extends BaseMix {
   submit: ApprovalApplicationBase["submit"];

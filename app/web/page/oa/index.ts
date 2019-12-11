@@ -13,6 +13,7 @@ library.add(faUserTag, faFile, faFileAlt, faBan, faCaretSquareDown, faEdit, faTi
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { Enum } from "./store/actions";
 import { Const } from "./router/const";
+import Cache from "./factory/cache";
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
@@ -92,12 +93,7 @@ const beforeCreate = function ({ store }) {
                   }
                 }
               })
-              if (errors.length === 0) {
-                // debugger
-                binding.value()
-              } else {
-                console.error(errors)
-              }
+              binding.value(errors)
             }
             break;
           case "confirm":
@@ -167,9 +163,11 @@ const beforeCreate = function ({ store }) {
       return exceptions.includes(remark)
     }
   })()
+  prototype.$cache = new Cache
   initialCommit(prototype, store)
 }
 
 export default new App({
   entry, createStore, createRouter, beforeCreate
 }).bootstrap() as any
+

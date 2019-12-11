@@ -3,6 +3,7 @@ import { Dispatch, Commit, Getters } from "../page/oa/store/store";
 import State from "../page/oa/store/state/index";
 import { Enum as _enum } from "../page/oa/store/actions";
 import { Const } from "../page/oa/router/const";
+import Cache from "../page/oa/factory/cache";
 
 declare type RC = {
   [key in keyof typeof Const]: typeof Const[key]
@@ -24,5 +25,6 @@ declare module 'vue/types/vue' {
     }
     Enum: typeof _enum
     $attendanceException(remark: string): boolean
+    $cache: Cache
   }
 }

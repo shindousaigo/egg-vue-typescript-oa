@@ -68,17 +68,9 @@ export namespace ACTIONS {
         type Demand = typeof ApprovalApplicationConfig["ParamsModel"][typeof Const.ApprovalDemand] & FileList
       }
       namespace Detail {
-        type State = State.Attendance
-        namespace State {
-          interface Attendance {
-            checkInDate: string
-            checkInType: string
-            createTime: string
-            departmentId: string
-            serialNumber: string
-            timeSlot: string
-            userId: string
-          }
+        type keys = keyof (Params.Attendance & Params.Overtime & Params.Leave & Params.Demand)
+        type State = {
+          [key in keys]: any
         }
         interface Params {
           serialNumber: string
