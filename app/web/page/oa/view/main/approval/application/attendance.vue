@@ -241,9 +241,9 @@ export default class Attendance extends ApprovalApplicationBase {
     this.params.reason = reason.join("|");
   }
   submit = (submit => {
-    return async () => {
+    return async errors => {
       this.beforeSubmit();
-      submit();
+      return submit(errors);
     };
   })(this.submit);
 

@@ -39,7 +39,16 @@ export function initialCommit(prototype, store: Store<State>) {
 
   prototype.$dispatch = new Proxy({}, {
     get(target, key: string) {
-      return (payload: any = {}) => store.dispatch(key, payload).catch(error => Notification.error(`${key}：error>>>${error}`))
+      return (payload: any = {}) => new Promise(function (resolve, reject) {
+        store.dispatch(key, payload)
+          .then(function (data) {
+            resolve(data)
+          })
+          .catch(function (error) {
+            reject(error)
+            Notification.error(`${error} from ${key}`)
+          })
+      })
     }
   })
   store.state.$commit.$dispatch(prototype.$dispatch)

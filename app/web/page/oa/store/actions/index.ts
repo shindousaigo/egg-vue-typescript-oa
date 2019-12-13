@@ -5,7 +5,13 @@ import { Notification } from "element-ui"
 
 const Methods = "methods"
 export type ActionsMethods = typeof Methods
+type ActionsPendingsV = {
+  resolve: (r: any) => void,
+  reject: (r: any) => void,
+  promise: Promise<any>
+}
 export default class Actions {
+  static pendings: Map<keyof Actions[ActionsMethods], ActionsPendingsV> = new Map
   private async fetch(url: keyof Actions[ActionsMethods], params?: any) {
     const config: RequestInit = {
       method: "POST"
@@ -20,19 +26,31 @@ export default class Actions {
         config.body = JSON.stringify(params)
       }
     }
-    const response = await fetch(`/oa/action/${url}`, config);
-    return response.json().then(res => {
-      if (typeof res === "string") {
-        return Promise.reject(res)
-      } else {
-        if (res.message) Notification.success(res.message)
-        return res
-      }
-    });
+    // @ts-ignore
+    const cache: ActionsPendingsV = {}
+    cache.promise = new Promise(function (resolve, reject) {
+      cache.resolve = resolve
+      cache.reject = reject
+    })
+    !Actions.pendings.has(url) && Actions.pendings.set(url, cache)
+    const response = await fetch(`/oa/action/${url}`, config)
+    const res = await response.json()
+    if (typeof res === "string") {
+      cache.reject(res)
+    } else {
+      if (res.message) Notification.success(res.message)
+      cache.resolve(res)
+    }
+    return cache.promise
   }
+
   public [Methods] = {
     /** 获取所有部门列表 */
     department_list: async (): Promise<ACTIONS.Department.List.State> => {
+      const cahce = Actions.pendings.get("department_list")
+      if (cahce) {
+        return cahce.promise
+      }
       const state = await this.fetch("department_list")
       this.state.$commit.department_list(state)
       return state
@@ -51,8 +69,7 @@ export default class Actions {
     },
     /** 根据流水号查询审批详细信息 */
     approval_list: async (params: ACTIONS.Approval.List.Params): Promise<ACTIONS.Approval.List.State> => {
-      const state = await this.fetch("approval_list", params)
-      return state
+      return this.fetch("approval_list", params)
     },
     /** 申请接口 */
     approval_application: async (params: ACTIONS.Approval.Application.Params): Promise<ACTIONS.Approval.Application.State> => {
@@ -60,26 +77,32 @@ export default class Actions {
     },
     /** 审核审批申请 */
     approval_confirm: async (params: ACTIONS.Approval.Confirm.Params): Promise<ACTIONS.Approval.Confirm.State> => {
-      const state = await this.fetch("approval_confirm", params)
-      return state
+      return this.fetch("approval_confirm", params)
     },
     /** 根据流水号查询申请详细信息 */
     approval_application_detail: async (params: ACTIONS.Approval.Application.Detail.Params): Promise<ACTIONS.Approval.Application.Detail.State> => {
-      const state = await this.fetch("approval_application_detail", params)
-      return state
+      return this.fetch("approval_application_detail", params)
     },
     /** 获取用户权限数据 */
     approval_application_delete: async (params: ACTIONS.Approval.Application.Delete.Params): Promise<ACTIONS.Approval.Application.Delete.State> => {
-      const state = await this.fetch("approval_application_delete", params)
-      return state
+      return this.fetch("approval_application_delete", params)
     },
     /** 获取用户权限数据 */
     user_permission: async (params: ACTIONS.User.Permission.Params): Promise<ACTIONS.User.Permission.State> => {
+      const cahce = Actions.pendings.get("user_permission")
+      if (cahce) {
+        return cahce.promise
+      }
       const state = await this.fetch("user_permission", params)
+      this.state.$commit.user_permission(state)
       return state
     },
     /** 获取用户列表 */
     user_list: async (params: ACTIONS.User.List.Params): Promise<ACTIONS.User.List.State> => {
+      const cahce = Actions.pendings.get("user_list")
+      if (cahce) {
+        return cahce.promise
+      }
       params.fetch_child = 1
       params.type = "list"
       const state = await this.fetch("user_list", params)
@@ -88,18 +111,30 @@ export default class Actions {
     },
     /** 获取用户信息 */
     user_info: async (params: ACTIONS.User.Info.Params): Promise<ACTIONS.User.Info.State> => {
+      const cahce = Actions.pendings.get("user_info")
+      if (cahce) {
+        return cahce.promise
+      }
       const state = await this.fetch("user_info", params)
       this.state.$commit.user_info(state)
       return state
     },
     /** 获取加班数据 */
     user_overtime_detail: async (params: ACTIONS.User.Overtime.Detail.Params): Promise<ACTIONS.User.Overtime.Detail.State> => {
+      const cahce = Actions.pendings.get("user_overtime_detail")
+      if (cahce) {
+        return cahce.promise
+      }
       const state = await this.fetch("user_overtime_detail", params)
       this.state.$commit.user_overtime_detail(state)
       return state
     },
     /** 获取用户年假明细 */
     user_annual_leave_detail: async (params: ACTIONS.User.AnnualLeave.Detail.Params): Promise<ACTIONS.User.AnnualLeave.Detail.State> => {
+      const cahce = Actions.pendings.get("user_annual_leave_detail")
+      if (cahce) {
+        return cahce.promise
+      }
       const state = await this.fetch("user_annual_leave_detail", params)
       this.state.$commit.user_annual_leave_detail(state)
       return state
@@ -112,20 +147,31 @@ export default class Actions {
     },
     /** 查询补签到记录 */
     user_approval_check_in_record: async (params: ACTIONS.User.Approval.CheckInRecord.Params): Promise<ACTIONS.User.Approval.CheckInRecord.State> => {
-      const state = await this.fetch("user_approval_check_in_record", params)
-      return state
+      return this.fetch("user_approval_check_in_record", params)
     },
     /** 获取用户年假明细 */
     leave_info: async (params: ACTIONS.Leave.Info.Params): Promise<ACTIONS.Leave.Info.State> => {
+      const cahce = Actions.pendings.get("leave_info")
+      if (cahce) {
+        return cahce.promise
+      }
       const state = await this.fetch("leave_info", params)
       this.state.$commit.leave_info(state)
       return state
     },
     /** 获取假别类型 */
     leave_type_list: async (): Promise<ACTIONS.Leave.Type.List.State> => {
+      const cahce = Actions.pendings.get("leave_type_list")
+      if (cahce) {
+        return cahce.promise
+      }
       const state = await this.fetch("leave_type_list")
       this.state.$commit.leave_type_list(state)
       return state
+    },
+    /** 问卷查询 */
+    questionnaire_query: async (params: ACTIONS.Approval.Application.Dismission.QuestionnaireQuery.Params): Promise<ACTIONS.Approval.Application.Dismission.QuestionnaireQuery.State> => {
+      return this.fetch("questionnaire_query", params)
     },
   }
   public state!: State

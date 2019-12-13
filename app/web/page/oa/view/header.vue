@@ -21,16 +21,10 @@
 <script lang="ts">
 import { Component, Prop, Vue, Inject, Watch } from "vue-property-decorator";
 import Container from "web/page/oa/view/container.vue";
+import HeaderBase from "./_header_base";
 
 @Component
-export default class HeaderBar extends Vue {
-  get info() {
-    if (this.$getters.user_dictionary)
-      return this.$getters.user_dictionary[this.$state.userid];
-  }
-  get avatar() {
-    return this.info ? this.info.avatar : require(`web/page/oa/assets/rg.png`);
-  }
+export default class HeaderBar extends HeaderBase {
   @Inject() Container!: Container;
 }
 </script>

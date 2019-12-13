@@ -2,33 +2,34 @@ import State from "../state";
 import moment from "moment"
 import { GETTERS } from "./types";
 import { Const } from "../../router/const";
+import { Notification } from "element-ui";
 
 const Methods = "methods"
 export type GettersMethods = typeof Methods
 
 export default class Getters {
   public [Methods] = {
-    get user_dictionary(): GETTERS.User.Dictionary {
+    get user_dictionary(): GETTERS.User.Dictionary | undefined {
       // @ts-ignore
       return function (state: State) {
-        if (state.user_list.length) {
+        if (state.user_list) {
           return Object.fromEntries(state.user_list.map(user => {
             return [user.userid, user]
           }))
         }
       }
     },
-    get leave_type_dictionary(): GETTERS.Leave.Type.Dictionary {
+    get leave_type_dictionary(): GETTERS.Leave.Type.Dictionary | undefined {
       // @ts-ignore
       return function (state: State) {
-        if (state.leave_type_list.length) {
+        if (state.leave_type_list) {
           return Object.fromEntries(state.leave_type_list.map(item => {
             return [item.id, item]
           }))
         }
       }
     },
-    get department_tree(): GETTERS.Department.Tree {
+    get department_tree(): GETTERS.Department.Tree | undefined {
       // @ts-ignore
       return function (state: State) {
         if (state.department_list) {
@@ -39,7 +40,7 @@ export default class Getters {
     get department_id_dictionary(): GETTERS.Department.ID.Dictionary | undefined {
       // @ts-ignore
       return function (state: State, getters: Getters[GettersMethods]) {
-        if (state.department_list.length && getters.department_tree) {
+        if (state.department_list && getters.department_tree) {
           return Object.fromEntries(
             state.department_list.map(department => [department.id, department])
           )
@@ -54,7 +55,7 @@ export default class Getters {
           [Const.DashboardWorkProcess]: [],
           [Const.DashboardWorkOver]: [],
         }
-        if (state.user_approval_list.length) {
+        if (state.user_approval_list) {
           state.user_approval_list.forEach(item => {
             if (item.result === 3) {
               if (state.userid === item.userId) {
@@ -73,16 +74,14 @@ export default class Getters {
         return dictionary
       }
     },
-    get attendance_page_record(): GETTERS.Attendance.PageRecord {
+    get attendance_page_record(): GETTERS.Attendance.PageRecord | undefined {
       // @ts-ignore
       return function (state: State) {
-        let pageRecord: GETTERS.Attendance.PageRecord = {}
         if (state.attendance_page_record) {
-          state.attendance_page_record.forEach(record => {
-            pageRecord[record.date] = record.remark
-          })
+          return Object.fromEntries(state.attendance_page_record.map(record => {
+            return [record.date, record.remark]
+          }))
         }
-        return pageRecord
       }
     },
     get attendance_date_scope(): GETTERS.Attendance.DateScope {
@@ -113,11 +112,9 @@ export default class Getters {
     get approval_type_dictionary(): GETTERS.Approval.Type.Dictionary {
       // @ts-ignore
       return function (state: State) {
-        const dictionary: GETTERS.Approval.Type.Dictionary = {}
-        state.approval_type_list.forEach(function (item) {
-          dictionary[item.applicationType] = item
-        })
-        return dictionary
+        return Object.fromEntries(state.approval_type_list.map(function (item) {
+          return [item.applicationType, item]
+        }))
       }
     },
   }

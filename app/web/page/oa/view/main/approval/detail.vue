@@ -196,6 +196,9 @@ export default class ApplicationDetail extends ApprovalApplicationConfig {
       })
       .then(data => {
         this.approvalApplicationDetail = data;
+      })
+      .catch(error => {
+        this.$router.go(-1);
       });
   }
 
@@ -217,6 +220,9 @@ export default class ApplicationDetail extends ApprovalApplicationConfig {
             }
           }
         });
+      })
+      .catch(error => {
+        this.$router.go(-1);
       });
   }
 

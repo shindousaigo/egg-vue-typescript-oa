@@ -1,10 +1,14 @@
-import { Vue } from "vue-property-decorator";
 import moment from "moment"
 import { ACTIONS } from "../../../../store/actions/types";
 import { RgServerBaseUrl } from "../../../../const_oa";
-import { Const } from "../../../../router/const";
+import { Component, Vue, Provide } from "vue-property-decorator";
+import DashboardUserinfoBase from "../../dashboard/userinfo/_dashboard_userinfo_base";
+import HeaderBase from "../../../_header_base";
 
-export default class ApprovalApplicationConfig extends Vue {
+@Component<ApprovalApplicationConfig>({
+  created() { }
+})
+export default class ApprovalApplicationConfig extends DashboardUserinfoBase {
 
   static _ins: ApprovalApplicationConfig
   static get instance() {
@@ -15,14 +19,12 @@ export default class ApprovalApplicationConfig extends Vue {
     ApprovalApplicationConfig._ins = this
   }
 
-  get component() {
-    return this.$state.route.params[this.ApprovalComponentRegex] || this.$state.route.params[this.ApprovalApplicationDetailComponentRegex]
+  get StaticApprovalApplicationConfig() {
+    return ApprovalApplicationConfig
   }
 
-  get departmentId() {
-    if (this.$getters.user_dictionary) {
-      return this.$getters.user_dictionary[this.$state.userid].department.join(',')
-    }
+  get component() {
+    return this.$state.route.params[this.ApprovalComponentRegex] || this.$state.route.params[this.ApprovalApplicationDetailComponentRegex]
   }
 
   get applicationDate() {
@@ -34,139 +36,172 @@ export default class ApprovalApplicationConfig extends Vue {
   }
 
   get description() {
-    const model = ApprovalApplicationConfig.DescpritionModel
-    return model[this.component] || {}
+    return ApprovalApplicationConfig.DescpritionModel[this.component] || {}
   }
 
-  static ParamsModel: {
-    [key in keyof typeof Const.ApprovalApplication]: any
-  } = {
-      [ApprovalApplicationConfig.instance.ApprovalApplication.attendance]: {
-        /** 申请类型 */
-        applicationType: "1",
-        /** 申请人 */
-        userId: ApprovalApplicationConfig.instance.$state.userid,
-        /** 需求部门id */
-        get departmentId() { return ApprovalApplicationConfig.instance.departmentId },
-        /** 申请日期	 */
-        get applicationDate() { return ApprovalApplicationConfig.instance.applicationDate },
-        /** 补签日期 */
-        checkInDate: "",
-        /** 补签原因 */
-        checkInType: "",
-        /** 补签时段 */
-        timeSlot: "",
-        /** 补签备注 */
-        reason: "",
-        /** 文件列表 */
-        fileList: ""
-      },
-      [ApprovalApplicationConfig.instance.ApprovalApplication.overtime]: {
-        /** 申请类型 */
-        applicationType: "2",
-        /** 申请人 */
-        userId: ApprovalApplicationConfig.instance.$state.userid,
-        /** 需求部门id */
-        get departmentId() { return ApprovalApplicationConfig.instance.departmentId },
-        /** 申请日期	 */
-        get applicationDate() { return ApprovalApplicationConfig.instance.applicationDate },
-        reason: "",
-        startTime: "",
-        endTime: "",
-        duration: "",
-      },
-      [ApprovalApplicationConfig.instance.ApprovalApplication.leave]: {
-        /** 申请类型 */
-        applicationType: "3",
-        /** 申请人	 */
-        userId: ApprovalApplicationConfig.instance.$state.userid,
-        /** 需求部门id */
-        get departmentId() { return ApprovalApplicationConfig.instance.departmentId },
-        /** 申请日期	 */
-        get applicationDate() { return ApprovalApplicationConfig.instance.applicationDate },
-        leaveType: "",
-        childrenType: "",
-        startTime: "",
-        endTime: "",
-        duration: 0,
-        reason: "",
-        handover: "",
-      },
-      [ApprovalApplicationConfig.instance.ApprovalApplication.admission]: {
-        /** 申请类型 */
-        applicationType: "4",
-        /** 申请人	 */
-        userId: ApprovalApplicationConfig.instance.$state.userid,
-        /** 需求部门id */
-        get departmentId() { return ApprovalApplicationConfig.instance.departmentId },
-        /** 申请日期	 */
-        get applicationDate() { return ApprovalApplicationConfig.instance.applicationDate },
-        /** 工号 */
-        employeeNumber: "",
-        /** 中文名 */
-        userNameCn: "",
-        /** 英文名 */
-        userNameEn: "",
-        /** 入职时间 */
-        entryDate: "",
-        /** 所属公司 */
-        companyId: "",
-        /** 所属部门 */
-        departmentName: "",
-        /** 职位名称 */
-        position: "",
-        /** 业务导师 */
-        businessTutorUserName: "",
-        /** 汇报上级 */
-        spervisorUserName: "",
-        /** 电脑配置 */
-        computerConfiguration: "",
-        /** 办公用品 */
-        isOfficeSupplies: "",
-        /** 其他配置 */
-        otherConfiguration: "",
-        /** 可上传文件 */
-        fileList: ""
-      },
-      [ApprovalApplicationConfig.instance.ApprovalApplication.demand]: {
-        /** 申请类型 */
-        applicationType: "6",
-        /** 申请人 */
-        userId: ApprovalApplicationConfig.instance.$state.userid,
-        /** 需求部门id */
-        get departmentId() { return ApprovalApplicationConfig.instance.departmentId },
-        /** 申请日期	 */
-        get applicationDate() { return ApprovalApplicationConfig.instance.applicationDate },
-        /** 需求岗位 */
-        position: "",
-        /** 需求人数 */
-        positionNumber: "",
-        /** 期待到岗日 */
-        arrivalDate: "",
-        /** 岗位定编人数 */
-        fixedPeople: "",
-        /** 岗位现有人数 */
-        alreadyPeople: "",
-        /** 需求原因 */
-        demandCause: "",
-        /** 主要工作职责 */
-        jobResponsibilities: "",
-        /** 年龄 */
-        age: "",
-        /** 学历 */
-        education: "",
-        /** 专业 */
-        profession: "",
-        /** 性别 */
-        gender: "0",
-        /** 建议薪资范围 */
-        salaryRange: "",
-        /** 特殊要求 */
-        specialRequirements: "",
-        /** 文件列表 */
-        fileList: ""
-      }, [ApprovalApplicationConfig.instance.ApprovalApplication.dismission]: {},
+  get period() {
+    return ApprovalApplicationConfig.PeriodModel
+  }
+
+  static ParamsModel = {
+    [ApprovalApplicationConfig.instance.ApprovalApplication.attendance]: {
+      /** 申请类型 */
+      applicationType: "1",
+      /** 申请人 */
+      userId: "",
+      /** 需求部门id */
+      departmentId: "",
+      /** 申请日期	 */
+      applicationDate: "",
+      /** 补签日期 */
+      checkInDate: "",
+      /** 补签原因 */
+      checkInType: "",
+      /** 补签时段 */
+      timeSlot: "",
+      /** 补签备注 */
+      reason: "",
+      /** 文件列表 */
+      fileList: ""
+    },
+    [ApprovalApplicationConfig.instance.ApprovalApplication.overtime]: {
+      /** 申请类型 */
+      applicationType: "2",
+      /** 申请人 */
+      userId: ApprovalApplicationConfig.instance.$state.userid,
+      /** 需求部门id */
+      departmentId: "",
+      /** 申请日期	 */
+      applicationDate: "",
+      reason: "",
+      startTime: "",
+      endTime: "",
+      duration: "",
+    },
+    [ApprovalApplicationConfig.instance.ApprovalApplication.leave]: {
+      /** 申请类型 */
+      applicationType: "3",
+      /** 申请人	 */
+      userId: ApprovalApplicationConfig.instance.$state.userid,
+      /** 需求部门id */
+      departmentId: "",
+      /** 申请日期	 */
+      applicationDate: "",
+      leaveType: "",
+      childrenType: "",
+      startTime: "",
+      endTime: "",
+      duration: 0,
+      reason: "",
+      handover: "",
+    },
+    [ApprovalApplicationConfig.instance.ApprovalApplication.admission]: {
+      /** 申请类型 */
+      applicationType: "4",
+      /** 申请人	 */
+      userId: ApprovalApplicationConfig.instance.$state.userid,
+      /** 需求部门id */
+      departmentId: "",
+      /** 申请日期	 */
+      applicationDate: "",
+      /** 工号 */
+      employeeNumber: "",
+      /** 中文名 */
+      userNameCn: "",
+      /** 英文名 */
+      userNameEn: "",
+      /** 入职时间 */
+      entryDate: "",
+      /** 所属公司 */
+      companyId: "",
+      /** 所属部门 */
+      departmentName: "",
+      /** 职位名称 */
+      position: "",
+      /** 业务导师 */
+      businessTutorUserName: "",
+      /** 汇报上级 */
+      spervisorUserName: "",
+      /** 电脑配置 */
+      computerConfiguration: "",
+      /** 办公用品 */
+      isOfficeSupplies: "",
+      /** 其他配置 */
+      otherConfiguration: "",
+      /** 可上传文件 */
+      fileList: ""
+    },
+    [ApprovalApplicationConfig.instance.ApprovalApplication.dismission]: {
+      // return {
+      /** 申请类型 */
+      applicationType: "5",
+      /** 申请人	 */
+      userId: ApprovalApplicationConfig.instance.$state.userid,
+      /** 申请人部门id */
+      departmentId: "",
+      /** 申请日期	 */
+      applicationDate: "",
+      /** 申请人姓名 */
+      userName: "",
+      /** 职务 */
+      position: "",
+      /** 工号 */
+      employeeNumber: "",
+      /** 邮箱 */
+      email: "",
+      /** 入职日期 格式 例：2019-01-01 */
+      entryDate: "",
+      /** 预离职日期 格式 例：2019-01-01 */
+      estimatedDepartureDate: "",
+      /** 离职原因 */
+      reason: "",
+      /** 模板id 接口四，问卷查询接口获得 */
+      templateId: "",
+      /** 申请人填写问题 */
+      applicantTopics: [],
+      /** 人事填写问题 */
+      personnelTopics: []
+      // }
+    },
+    [ApprovalApplicationConfig.instance.ApprovalApplication.demand]: {
+      /** 申请类型 */
+      applicationType: "6",
+      /** 申请人 */
+      userId: ApprovalApplicationConfig.instance.$state.userid,
+      /** 需求部门id */
+      departmentId: "",
+      /** 申请日期	 */
+      applicationDate: "",
+      /** 需求岗位 */
+      position: "",
+      /** 需求人数 */
+      positionNumber: "",
+      /** 期待到岗日 */
+      arrivalDate: "",
+      /** 岗位定编人数 */
+      fixedPeople: "",
+      /** 岗位现有人数 */
+      alreadyPeople: "",
+      /** 需求原因 */
+      demandCause: "",
+      /** 主要工作职责 */
+      jobResponsibilities: "",
+      /** 年龄 */
+      age: "",
+      /** 学历 */
+      education: "",
+      /** 专业 */
+      profession: "",
+      /** 性别 */
+      gender: "0",
+      /** 建议薪资范围 */
+      salaryRange: "",
+      /** 特殊要求 */
+      specialRequirements: "",
+      /** 文件列表 */
+      fileList: ""
     }
+  }
 
   static Cache = {}
 
@@ -275,7 +310,7 @@ export default class ApprovalApplicationConfig extends Vue {
     ]
   }
 
-  private static DescriptionModelTpl(label: string, valuefn?: string | ((detail: ACTIONS.Approval.Application.Detail.State, key: string) => string)) {
+  static DescriptionModelTpl(label: string, valuefn?: string | ((detail: ACTIONS.Approval.Application.Detail.State, key: string) => string)) {
     return {
       label,
       value(detail: ACTIONS.Approval.Application.Detail.State, key: string) {
@@ -418,7 +453,4 @@ export default class ApprovalApplicationConfig extends Vue {
     };
   })()
 
-  get period() {
-    return ApprovalApplicationConfig.PeriodModel
-  }
 }

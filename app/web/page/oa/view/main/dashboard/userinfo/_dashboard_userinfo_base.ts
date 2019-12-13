@@ -1,7 +1,11 @@
 import { Component, Vue, Provide } from "vue-property-decorator";
+import HeaderBase from "../../../_header_base";
 
 @Component<DashboardUserinfoBase>({
   created() {
+    this.$dispatch.user_info({
+      userid: this.$state.userid
+    })
     this.$dispatch.user_overtime_detail({
       userid: this.$state.userid
     });
@@ -11,99 +15,111 @@ import { Component, Vue, Provide } from "vue-property-decorator";
     this.$dispatch.leave_type_list();
   }
 })
-export default class DashboardUserinfoBase extends Vue {
+export default class DashboardUserinfoBase extends HeaderBase {
+
+  static _ins: DashboardUserinfoBase
+  static get instance() {
+    return this._ins || new DashboardUserinfoBase
+  }
+  constructor() {
+    super()
+    DashboardUserinfoBase._ins = this
+  }
+
   static OvertimeTypeMap = ["", "加班", "结算到工资", "HR"];
   static UserStatusMap = ["实习生", "试用期", "正式员工", "离职员工"];
-  get userinfo() {
-    const _cache = Object.assign(
-      {},
-      this.$state.user_overtime_detail,
-      this.$state.user_annual_leave_detail
-    );
-    const _userinfo = Object.assign(
-      {},
-      this.$getters.user_dictionary
-        ? this.$getters.user_dictionary[this.$state.userid]
-        : {},
-      this.$state.user_info
-    );
-    return Object.assign({}, _cache, _userinfo);
+
+  get userInfo() {
+    return this.$state.user_info
   }
-  get position() {
-    return this.userinfo.position;
+
+  get userOvertimeDetail() {
+    return this.$state.user_overtime_detail
   }
-  get employeeNumber() {
-    return this.userinfo.employeeNumber;
+
+  get userAnnualLeaveDetail() {
+    return this.$state.user_annual_leave_detail
   }
-  get telephone() {
-    return this.userinfo.telephone;
-  }
+
   get userName() {
-    return this.userinfo.userName;
+    return this.userInfo && this.userInfo.userName;
   }
+
+  get userId() {
+    return this.userInfo && this.userInfo.userId;
+  }
+
+  get employeeNumber() {
+    return this.userInfo && this.userInfo.employeeNumber;
+  }
+
   get userStatus() {
-    return DashboardUserinfoBase.UserStatusMap[this.userinfo.userStatus];
+    return this.userInfo && DashboardUserinfoBase.UserStatusMap[this.userInfo.userStatus];
   }
+
   get entryDate() {
-    return this.userinfo.entryDate;
+    return this.userInfo && this.userInfo.entryDate;
   }
+
   get correctionDate() {
-    return this.userinfo.correctionDate;
+    return this.userInfo && this.userInfo.correctionDate;
   }
+
   get newContractDate() {
-    return this.userinfo.newContractDate;
+    return this.userInfo && this.userInfo.newContractDate;
   }
+
   get contractExpirationDate() {
-    return this.userinfo.contractExpirationDate;
+    return this.userInfo && this.userInfo.contractExpirationDate;
   }
+
   get overtimeInfoList() {
-    if (this.userinfo.user_overtime_detail) {
-      const list = this.userinfo.user_overtime_detail.overtimeInfoList.sort(
-        function (a, b) {
-          return (
-            new Date(b.overtimeDate).getTime() -
-            new Date(a.overtimeDate).getTime()
-          );
+    if (this.userOvertimeDetail) {
+      return this.userOvertimeDetail.overtimeInfoList.sort(
+        function (pre, next) {
+          return new Date(next.overtimeDate).getTime() - new Date(pre.overtimeDate).getTime()
         }
-      );
-      return list;
+      )
     }
   }
+
   get overtimeUseDetailInfoList() {
-    if (this.userinfo.user_overtime_detail) {
-      return this.userinfo.user_overtime_detail.useDetailInfoList;
+    if (this.userOvertimeDetail) {
+      return this.userOvertimeDetail.useDetailInfoList;
     }
   }
+
   get produceDetailInfoList() {
-    if (this.userinfo.user_annual_leave_detail) {
-      return this.userinfo.user_annual_leave_detail.produceDetailInfoList.sort(
-        function (a, b) {
-          return (
-            new Date(b.expireDate).getTime() - new Date(a.expireDate).getTime()
-          );
+    if (this.userAnnualLeaveDetail) {
+      return this.userAnnualLeaveDetail.produceDetailInfoList.sort(
+        function (pre, next) {
+          return new Date(next.expireDate).getTime() - new Date(pre.expireDate).getTime()
         }
-      );
+      )
     }
   }
+
   get annualLeaveUseDetailInfoList() {
-    if (this.userinfo.user_annual_leave_detail) {
-      return this.userinfo.user_annual_leave_detail.useDetailInfoList;
+    if (this.userAnnualLeaveDetail) {
+      return this.userAnnualLeaveDetail.useDetailInfoList;
     }
   }
+
   get overtimeAvailable() {
-    if (this.userinfo.user_overtime_detail) {
-      const add = this.userinfo.user_overtime_detail.overtimeInfoList
+    if (this.userOvertimeDetail) {
+      const add = this.userOvertimeDetail.overtimeInfoList
         .map(item => item.overtimeTotal)
         .reduce((a, b) => a + b);
-      const minus = this.userinfo.user_overtime_detail.useDetailInfoList
+      const minus = this.userOvertimeDetail.useDetailInfoList
         .map(item => -item.duration)
         .reduce((a, b) => a + b);
       return add + minus
     }
   }
+
   get annualLeaveAvailable() {
-    if (this.userinfo.user_annual_leave_detail) {
-      return this.userinfo.user_annual_leave_detail.produceDetailInfoList
+    if (this.userAnnualLeaveDetail) {
+      return this.userAnnualLeaveDetail.produceDetailInfoList
         .map(item => item.availableLeave)
         .reduce((a, b) => a + b)
     }

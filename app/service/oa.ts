@@ -33,8 +33,7 @@ export default class OaService extends Service implements Implements {
           message: config.data.message
         }
       } else {
-        const message = typeof config.data === "string" ? config.data : config.data.message
-        return message;
+        return config.data.message || config.data
       }
     }, function (error) {
       return error
@@ -138,7 +137,7 @@ export default class OaService extends Service implements Implements {
       const data: { roleInfo: ACTIONS.User.Permission.State } = await this.rgAxios.post("/user/userPermission", {
         userId: params.userid
       })
-      return data.roleInfo
+      return data.roleInfo || data
     } catch (error) {
       return error.message
     }
@@ -169,7 +168,7 @@ export default class OaService extends Service implements Implements {
       const data: { userInfo: ACTIONS.User.Info.State } = await this.rgAxios.post("/user/userInfo", {
         userId: params.userid
       })
-      return data.userInfo
+      return data.userInfo || data
     } catch (error) {
       return error.message
     }
@@ -181,7 +180,7 @@ export default class OaService extends Service implements Implements {
       const data: ACTIONS.User.Overtime.Detail.State = await this.rgAxios.post("/leave/overtimeDetailInfo", {
         userId: params.userid
       })
-      return { user_overtime_detail: data }
+      return data
     } catch (error) {
       return error.message
     }
@@ -193,7 +192,7 @@ export default class OaService extends Service implements Implements {
       const data: ACTIONS.User.AnnualLeave.Detail.State = await this.rgAxios.post("/leave/annualLeaveDetailInfo", {
         userId: params.userid
       })
-      return { user_annual_leave_detail: data }
+      return data
     } catch (error) {
       return error.message
     }
@@ -205,7 +204,7 @@ export default class OaService extends Service implements Implements {
       const data: { approvalInfo: ACTIONS.User.Approval.List.State } = await this.rgAxios.post("/approval/approvalAllInfo", {
         userId: params.userid
       })
-      return data.approvalInfo
+      return data.approvalInfo || data
     } catch (error) {
       return error.message
     }
@@ -240,7 +239,7 @@ export default class OaService extends Service implements Implements {
   public async leave_type_list(ctx: Context) {
     try {
       const data: { LeaveTypeList: ACTIONS.Leave.Type.List.State } = await this.rgAxios.get("/leave/allType")
-      return data.LeaveTypeList
+      return data.LeaveTypeList || data
     } catch (error) {
       return error.message
     }
@@ -254,7 +253,7 @@ export default class OaService extends Service implements Implements {
         startTime: params.startTime,
         endTime: params.endTime
       })
-      return data.AttendanceInfo
+      return data.AttendanceInfo || data
     } catch (error) {
       return error.message
     }
@@ -267,7 +266,7 @@ export default class OaService extends Service implements Implements {
         userId: params.userid,
         date: params.date,
       })
-      return data.punchRecordList
+      return data.punchRecordList || data
     } catch (error) {
       return error.message
     }
@@ -279,7 +278,7 @@ export default class OaService extends Service implements Implements {
       const data: { approvalDetailInfo: ACTIONS.Approval.List.State } = await this.rgAxios.post("/approval/approvalDetailInfo", {
         serialNumber: params.serialNumber
       })
-      return data.approvalDetailInfo
+      return data.approvalDetailInfo || data
     } catch (error) {
       return error.message
     }
@@ -318,7 +317,7 @@ export default class OaService extends Service implements Implements {
       const data: { applicationDetailInfo: ACTIONS.Approval.Application.Detail.State } = await this.rgAxios.post("/approval/applicationDetailInfo", {
         serialNumber: params.serialNumber
       })
-      return data.applicationDetailInfo
+      return data.applicationDetailInfo || data
     } catch (error) {
       return error.message
     }
@@ -340,6 +339,16 @@ export default class OaService extends Service implements Implements {
     try {
       const params: ACTIONS.Approval.Confirm.Params = JSON.parse(ctx.request.rawBody)
       const data: ACTIONS.Approval.Confirm.State = await this.rgAxios.post("/approval/confirm", params)
+      return data
+    } catch (error) {
+      return error.message
+    }
+  }
+
+  public async questionnaire_query(ctx: Context) {
+    try {
+      const params: ACTIONS.Approval.Application.Dismission.QuestionnaireQuery.Params = JSON.parse(ctx.request.rawBody)
+      const data: ACTIONS.Approval.Application.Dismission.QuestionnaireQuery.State = await this.rgAxios.post("/questionnaire/query", params)
       return data
     } catch (error) {
       return error.message

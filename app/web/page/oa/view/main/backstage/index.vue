@@ -17,7 +17,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 export default class Backstage extends Vue {
   user_list = [];
   get userListLen() {
-    return this.$state.user_list.length;
+    return this.$state.user_list && this.$state.user_list.length;
   }
   get initUserList() {
     return this.$state.user_list.map(user => user.userid);

@@ -10,7 +10,7 @@ export namespace GETTERS {
     namespace ID {
       type Dictionary = {
         [id: string]: Tree
-      } 
+      }
     }
   }
 
@@ -29,7 +29,7 @@ export namespace GETTERS {
   namespace User {
     type Dictionary = {
       [userid: string]: ACTIONS.User.List.Item
-    } | undefined
+    }
     namespace Approval {
       namespace List {
         type wait = typeof Const.DashboardWorkWait
@@ -57,7 +57,7 @@ export namespace GETTERS {
     namespace Type {
       type Dictionary = {
         [type: string]: ACTIONS.Leave.Type.List.LeaveType
-      } | undefined
+      } 
     }
   }
 

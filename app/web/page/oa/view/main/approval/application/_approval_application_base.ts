@@ -5,19 +5,33 @@ import { ACTIONS } from "../../../../store/actions/types";
 
 @Component<ApprovalApplicationBase>({
   created() {
-    this.params = Object.assign({}, ApprovalApplicationConfig.ParamsModel[this.component])
-  },
+    this.params = Object.assign({}, this.StaticApprovalApplicationConfig.ParamsModel[this.component])
+  }
 })
 export default class ApprovalApplicationBase extends ApprovalApplicationConfig {
   @Provide("provider")
   get provider() {
     return this
   }
-  params: null | ACTIONS.Approval.Application.Params.Attendance | ACTIONS.Approval.Application.Params.Overtime | ACTIONS.Approval.Application.Params.Leave | ACTIONS.Approval.Application.Params.Demand = null
+
+  params: ACTIONS.Approval.Application.Params | null = null
+
+  parseParams() {
+    const params = Object.assign({}, this.params)
+    Object.keys(params).forEach(key => {
+      if (!params[key] && this[key]) {
+        params[key] = this[key]
+      } else if (key === "applicantTopics" || key === "personnelTopics") {
+        params[key] = JSON.stringify(params[key])
+      }
+    })
+    return params
+  }
+
   async submit(errors: string[]) {
     if (errors.length === 0) {
-      if (this.params) {
-        const params = this.params
+      const params = this.parseParams()
+      if (params) {
         const formData = new FormData
         Object.keys(params).forEach(function (key: string) {
           if (key === "fileList" && params.fileList.length) {

@@ -74,7 +74,7 @@
           </div>
         </template>
         <template slot slot-scope="{ row }">
-          {{ getProcessTypeLabel(row) }}
+          {{ parseProcessTypeLabel(row) }}
         </template>
       </el-table-column>
       <el-table-column width="220">
@@ -255,7 +255,7 @@ export default class Work extends Vue {
   get processTypeOptions() {
     return this.$getters.approval_type_dictionary;
   }
-  getProcessTypeLabel(row: GETTERS.User.Approval.List.Item) {
+  parseProcessTypeLabel(row: GETTERS.User.Approval.List.Item) {
     return this.$getters.approval_type_dictionary[row.processType].label;
   }
   getSerialNumberFontAwesomeIcon(row: GETTERS.User.Approval.List.Item) {

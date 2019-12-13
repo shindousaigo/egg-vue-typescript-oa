@@ -5,7 +5,7 @@
       <span class="position">{{ position }}</span>
     </div>
     <div class="userinfo-item" v-for="item in infoItems" :key="item.key">
-      <el-tag>{{ item.label }}： {{ getData(item.key) }}</el-tag>
+      <el-tag>{{ item.label }}： {{ parseData(item.key) }}</el-tag>
     </div>
     <div class="userinfo-item">
       <el-tag>
@@ -51,7 +51,7 @@
                     类型
                   </template>
                   <template slot slot-scope="{ row }">
-                    {{ getOvertimeType(row.overtimeType) }}
+                    {{ parseOvertimeType(row) }}
                   </template>
                 </el-table-column>
               </el-table-column>
@@ -90,7 +90,7 @@
                     类型
                   </template>
                   <template slot slot-scope="{ row }">
-                    {{ getLeaveName(row) }}
+                    {{ parseLeaveName(row) }}
                   </template>
                 </el-table-column>
               </el-table-column>
@@ -116,7 +116,7 @@
               }"
               size="mini"
               :data="produceDetailInfoList"
-              :row-class-name="getProduceDetailInfoListRowClassName"
+              :row-class-name="parseProduceDetailInfoListRowClassName"
             >
               <el-table-column class-name="overtime-detail-title">
                 <template slot="header" slot-scope="{}">
@@ -197,18 +197,24 @@ import { ACTIONS } from "web/page/oa/store/actions/types";
 import DashboardUserinfoBase from "./_dashboard_userinfo_base";
 
 export default class Userinfo extends DashboardUserinfoBase {
-  getOvertimeType(overtimeType) {
-    return DashboardUserinfoBase.OvertimeTypeMap[overtimeType];
+  parseOvertimeType(row: ACTIONS.User.Overtime.Detail.overtimeInfoListItem) {
+    return DashboardUserinfoBase.OvertimeTypeMap[row.overtimeType];
   }
-  getData(key) {
+  parseData(key) {
     return this[key];
   }
-  getLeaveName(row: ACTIONS.User.AnnualLeave.Detail.UseDetailInfoListItem) {
-    const type = this.$getters.leave_type_dictionary[row.leaveType];
-    return (type && type.leaveName) || "";
+  parseLeaveName(row: ACTIONS.User.AnnualLeave.Detail.UseDetailInfoListItem) {
+    return (
+      this.$getters.leave_type_dictionary &&
+      this.$getters.leave_type_dictionary[row.leaveType]
+    );
   }
-  getProduceDetailInfoListRowClassName({ row }) {
-    return `produce-detail-info-list${row.isAvailable ? "" : " disabled"}`;
+  parseProduceDetailInfoListRowClassName({
+    row
+  }: {
+    row: ACTIONS.User.AnnualLeave.Detail.produceDetailInfoListItem;
+  }) {
+    return "produce-detail-info-list" + row.isAvailable ? "" : " disabled";
   }
   infoItems = [
     {

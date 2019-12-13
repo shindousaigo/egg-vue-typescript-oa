@@ -61,9 +61,7 @@
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import moment from "moment";
 
-@Component<Calendar>({
-  created() {}
-})
+@Component
 export default class Calendar extends Vue {
   weekdays = 7;
   columns: {
@@ -148,7 +146,7 @@ export default class Calendar extends Vue {
     date && this.query(date);
   }
   hasRemak(date) {
-    return this.$getters.attendance_page_record[date];
+    return this.pageRecord && this.pageRecord[date];
   }
   get pageRecord() {
     return this.$getters.attendance_page_record;

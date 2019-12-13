@@ -17,23 +17,24 @@ export default class State {
   locale = ""
   origin = ""
   userid = ""
-  route: Route = "" as any
+  route!: Route
 
   $state: State = this
-  $commit: Commit = "" as any
-  $getters: Getters = "" as any
-  $dispatch: Dispatch = "" as any
+  $commit!: Commit
+  $getters!: Getters
+  $dispatch!: Dispatch
 
-  user_list: ACTIONS.User.List.State = []
-  user_info: ACTIONS.User.Info.State = "" as any
-  user_approval_list: ACTIONS.User.Approval.List.State = []
-  user_overtime_detail: ACTIONS.User.Overtime.Detail.State = "" as any
-  user_annual_leave_detail: ACTIONS.User.AnnualLeave.Detail.State = "" as any
+  user_permission: any | null = null
+  user_list: ACTIONS.User.List.State | null = null
+  user_info: ACTIONS.User.Info.State | null = null
+  user_approval_list: ACTIONS.User.Approval.List.State | null = null
+  user_overtime_detail: ACTIONS.User.Overtime.Detail.State | null = null
+  user_annual_leave_detail: ACTIONS.User.AnnualLeave.Detail.State | null = null
 
-  department_list: ACTIONS.Department.List.State = []
+  department_list: ACTIONS.Department.List.State | null = null
 
-  leave_info: ACTIONS.Leave.Info.State = "" as any
-  leave_type_list: ACTIONS.Leave.Type.List.State = []
+  leave_info: ACTIONS.Leave.Info.State | null = null
+  leave_type_list: ACTIONS.Leave.Type.List.State | null = null
 
   approval_type_list = [
     {
@@ -108,7 +109,7 @@ export default class State {
     },
   ]
 
-  attendance_page_record: ACTIONS.Attendance.PageRecord.State = []
-  attendance_punch_record: ACTIONS.Attendance.PunchRecord.State = "" as any
+  attendance_page_record: ACTIONS.Attendance.PageRecord.State | null = null
+  attendance_punch_record: ACTIONS.Attendance.PunchRecord.State | null = null
   attendance_date: Date = new Date
 }

@@ -163,9 +163,9 @@ export default class Leave extends BaseMix {
     super(props);
     /** overwrite */
     this.submit = (submit => {
-      return async () => {
+      return async errors => {
         this.beforeSubmit();
-        submit();
+        return submit(errors);
       };
     })(this.submit);
   }

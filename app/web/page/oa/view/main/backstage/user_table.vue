@@ -16,12 +16,12 @@
       </el-table-column>
       <el-table-column label="姓名" width="130">
         <template slot slot-scope="{ row }">
-          {{ getName(row) }}
+          {{ parseName(row) }}
         </template>
       </el-table-column>
       <el-table-column label="部门" width="196">
         <template slot slot-scope="{ row }">
-          {{ getDepartment(row) }}
+          {{ parseDepartment(row) }}
         </template>
       </el-table-column>
       <el-table-column label="职位" width="190">
@@ -60,11 +60,8 @@
  
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-import Container from "web/page/oa/view/container.vue";
-import Dashboard from "web/page/oa/view/dashboard.vue";
-import { ACTIONS } from "web/page/oa/store/actions/types";
 
-@Component<UserTable>({})
+@Component
 export default class UserTable extends Vue {
   @Prop() data!: any[];
   async edit_detail(userid) {
@@ -83,19 +80,25 @@ export default class UserTable extends Vue {
       path: "/backstage/leave-info-table"
     });
   }
-  getDepartment(row: string) {
-    return this.$getters.user_dictionary[row].department
-      .map(
-        department_id =>
-          this.$getters.department_id_dictionary[department_id].name
-      )
-      .join(" 、");
+  parseDepartment(row: string) {
+    if (this.$getters.user_dictionary && this.$getters.department_id_dictionary)
+      return this.$getters.user_dictionary[row].department
+        .map(
+          department_id =>
+            this.$getters.department_id_dictionary[department_id].name
+        )
+        .join(" 、");
   }
-  getName(row: string) {
-    return this.$getters.user_dictionary[row].name;
+  parseName(row: string) {
+    return (
+      this.$getters.user_dictionary && this.$getters.user_dictionary[row].name
+    );
   }
   getPosition(row: string) {
-    return this.$getters.user_dictionary[row].position;
+    return (
+      this.$getters.user_dictionary &&
+      this.$getters.user_dictionary[row].position
+    );
   }
 }
 </script>

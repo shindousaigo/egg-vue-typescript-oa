@@ -23,17 +23,7 @@
 import("font-awesome/css/font-awesome.min.css");
 import { Component, Prop, Vue, Emit, Provide } from "vue-property-decorator";
 
-@Component<Container>({
-  async created() {
-    await this.$dispatch.department_list();
-    this.$dispatch.user_list({
-      department_id: this.$getters.department_tree[0].id
-    });
-    this.$dispatch.user_info({
-      userid: this.$state.userid
-    });
-  }
-})
+@Component<Container>({})
 export default class Container extends Vue {
   @Provide() get Container() {
     return this;

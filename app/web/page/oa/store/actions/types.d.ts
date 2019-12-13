@@ -61,16 +61,149 @@ export namespace ACTIONS {
       type FileList = {
         fileList: UploadFileList
       }
+      type Params = Params.Attendance | Params.Overtime | Params.Leave | Params.Demand | Params.Admission | Params.Dismission
       namespace Params {
-        type Attendance = typeof ApprovalApplicationConfig["ParamsModel"][typeof Const.ApprovalAttendance] & FileList
-        type Overtime = typeof ApprovalApplicationConfig["ParamsModel"][typeof Const.ApprovalOvertime] & FileList
-        type Leave = typeof ApprovalApplicationConfig["ParamsModel"][typeof Const.ApprovalLeave] & FileList
-        type Demand = typeof ApprovalApplicationConfig["ParamsModel"][typeof Const.ApprovalDemand] & FileList
+        type Attendance = typeof ApprovalApplicationConfig["ParamsModel"][typeof Const.ApprovalApplication.attendance] & FileList
+        type Overtime = typeof ApprovalApplicationConfig["ParamsModel"][typeof Const.ApprovalApplication.overtime] & FileList
+        type Leave = typeof ApprovalApplicationConfig["ParamsModel"][typeof Const.ApprovalApplication.leave] & FileList
+        type Demand = typeof ApprovalApplicationConfig["ParamsModel"][typeof Const.ApprovalApplication.demand] & FileList
+        type Admission = typeof ApprovalApplicationConfig["ParamsModel"][typeof Const.ApprovalApplication.admission] & FileList
+        type Dismission = typeof ApprovalApplicationConfig["ParamsModel"][typeof Const.ApprovalApplication.dismission] & FileList
+      }
+      namespace Dismission {
+        namespace QuestionnaireQuery {
+          interface Params {
+            /** 问卷类型 1=离职问卷 */
+            type: number
+          }
+          interface applicantTopicListItem {
+            answerList: {
+              order: number
+              answerType: number
+              answerContent: string
+            }[]
+            order: number
+            topicContent: string
+            topicId: number
+            topicType: number
+          }
+          interface personnelTopicListItem {
+            order: number
+            topicContent: string
+            topicId: number
+            topicType: number
+          }
+          type State = {
+            applicantTopicList: applicantTopicListItem[]
+            personnelTopicList: personnelTopicListItem[]
+            templateId: number
+            type: number
+          }
+        }
       }
       namespace Detail {
-        type keys = keyof (Params.Attendance & Params.Overtime & Params.Leave & Params.Demand)
-        type State = {
-          [key in keys]: any
+        type State = State.Attendance & State.Overtime & State.Leave & State.Demand & State.Admission & State.Dismission
+        namespace State {
+          interface Attendance {
+            checkInDate: string
+            checkInType: string
+            createTime: string
+            departmentId: string
+            reason: string
+            serialNumber: string
+            timeSlot: string
+            userId: string
+          }
+          interface Overtime {
+            applicationDate: string
+            createTime: string
+            departmentId: string
+            duration: string
+            endTime: string
+            reason: string
+            serialNumber: string
+            startTime: string
+            userId: string
+          }
+          interface Leave {
+            applicationDate: string
+            createTime: string
+            departmentId: string
+            duration: number
+            endTime: string
+            handover: string
+            leaveType: string
+            reason: string
+            serialNumber: string
+            startTime: string
+            userId: string
+            childrenType: number
+          }
+          interface Demand {
+            age: number
+            alreadyPeople: number
+            annexPath: string
+            applicationDate: string
+            arrivalDate: string
+            createTime: string
+            demandCause: string
+            departmentId: string
+            education: string
+            fixedPeople: number
+            gender: number
+            jobResponsibilities: string
+            position: string
+            positionNumber: number
+            profession: string
+            salaryRange: string
+            serialNumber: string
+            specialRequirements: string
+            userId: string
+          }
+          interface Admission {
+            annexPath: string
+            businessTutorUserName: string
+            companyId: 0
+            computerConfiguration: 1
+            createTime: string
+            departmentName: string
+            employeeNumber: string
+            entryDate: string
+            isOfficeSupplies: number
+            otherConfiguration: string
+            position: string
+            serialNumber: string
+            spervisorUserName: string
+            userId: string
+            userNameCn: string
+            userNameEn: string
+          }
+          interface Dismission {
+            applicantTopicList: {
+              topicId: number
+              answerType: number
+              select: number
+              constent: string
+            }[]
+            applicationDate: string
+            createTime: string
+            departmentId: string
+            email: string
+            employeeNumber: string
+            entryDate: string
+            estimatedDepartureDate: string
+            id: number
+            personnelTopicList: {
+              topicId: number
+              content: string
+            }[]
+            position: string
+            reason: string
+            serialNumber: string
+            templateId: number
+            userId: string
+            userName: string
+          }
         }
         interface Params {
           serialNumber: string
@@ -224,30 +357,31 @@ export namespace ACTIONS {
     }
     namespace Overtime {
       namespace Detail {
+        type hrSettingInfoList = {
+          duration: number
+          id: number
+          leaveType: number
+          settingDate: string
+          settingType: number
+          userId: string
+        }
+        type overtimeInfoListItem = {
+          overtimeDate: string
+          overtimeTotal: number
+          /** 1: "加班", 2: "结算到工资", 3: "HR" */
+          overtimeType: string
+          userId: string
+        }
+        type useDetailInfoListItem = {
+          duration: number
+          leaveType: string
+          useDate: string
+          userId: string
+        }
         interface State {
-          user_overtime_detail: {
-            hrSettingInfoList: {
-              duration: number
-              id: number
-              leaveType: number
-              settingDate: string
-              settingType: number
-              userId: string
-            }[]
-            overtimeInfoList: {
-              overtimeDate: string
-              overtimeTotal: number
-              /** 1: "加班", 2: "结算到工资", 3: "HR" */
-              overtimeType: string
-              userId: string
-            }[]
-            useDetailInfoList: {
-              duration: number
-              leaveType: string
-              useDate: string
-              userId: string
-            }[]
-          }
+          hrSettingInfoList: hrSettingInfoList[]
+          overtimeInfoList: overtimeInfoListItem[]
+          useDetailInfoList: useDetailInfoListItem[]
         }
         interface Params {
           userid: string
@@ -259,35 +393,35 @@ export namespace ACTIONS {
         interface Params {
           userid: string
         }
-        interface UseDetailInfoListItem {
+        type produceDetailInfoListItem = {
+          availableLeave: number
+          expireDate: string
+          id: number
+          isAvailable: number
+          isStateet: number
+          leaveTotal: number
+          produceDate: string
+          useLeave: number
+          userId: string
+        }
+        type hrSettingInfoListItem = {
+          duration: number
+          id: number
+          leaveType: number
+          settingDate: string
+          settingType: number
+          userId: string
+        }
+        type UseDetailInfoListItem = {
           duration: number
           leaveType: string
           useDate: string
           userId: string
         }
         interface State {
-          user_annual_leave_detail: {
-            hrSettingInfoList: {
-              duration: number
-              id: number
-              leaveType: number
-              settingDate: string
-              settingType: number
-              userId: string
-            }[]
-            produceDetailInfoList: {
-              availableLeave: number
-              expireDate: string
-              id: number
-              isAvailable: number
-              isStateet: number
-              leaveTotal: number
-              produceDate: string
-              useLeave: number
-              userId: string
-            }[]
-            useDetailInfoList: UseDetailInfoListItem[]
-          }
+          hrSettingInfoList: hrSettingInfoListItem[]
+          produceDetailInfoList: produceDetailInfoListItem[]
+          useDetailInfoList: UseDetailInfoListItem[]
         }
       }
     }

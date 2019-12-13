@@ -15,7 +15,7 @@
       </el-table-column>
       <el-table-column label="姓名" width="130">
         <template slot slot-scope="{ row }">
-          {{ getName(row) }}
+          {{ parseName(row) }}
         </template>
       </el-table-column>
       <el-table-column label="年假可用天数" width="135">
@@ -113,8 +113,11 @@ export default class LeaveInfoTable extends Vue {
       dlink.click();
     };
   })();
-  getName(row: ACTIONS.Leave.Info.AnnualLeaveInfoListItem) {
-    this.$getters.user_dictionary[row.userId].name;
+  parseName(row: ACTIONS.Leave.Info.AnnualLeaveInfoListItem) {
+    return (
+      this.$getters.user_dictionary &&
+      this.$getters.user_dictionary[row.userId].name
+    );
   }
 }
 </script>
